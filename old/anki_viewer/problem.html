@@ -1,0 +1,300 @@
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/5.10.0/math.min.js"></script>
+
+<p id="problem-type"><i>{{Problem Type}}</i></p>
+<div id="err"></div>
+<div id="problem">Loading...</div>
+
+<script>
+    // v0.5.2 - https://github.com/SimonLammer/anki-persistence/blob/62463a7f63e79ce12f7a622a8ca0beb4c1c5d556/script.js
+    if (void 0 === window.Persistence) {
+        var _persistenceKey = "github.com/SimonLammer/anki-persistence/",
+            _defaultKey = "_default";
+        if (window.Persistence_sessionStorage = function () {
+                var e = !1;
+                try {
+                    "object" == typeof window.sessionStorage && (e = !0, this.clear = function () {
+                        for (var e = 0; e < sessionStorage.length; e++) {
+                            var t = sessionStorage.key(e);
+                            0 == t.indexOf(_persistenceKey) && (sessionStorage.removeItem(t), e--)
+                        }
+                    }, this.setItem = function (e, t) {
+                        void 0 == t && (t = e, e = _defaultKey), sessionStorage.setItem(_persistenceKey + e,
+                            JSON.stringify(t))
+                    }, this.getItem = function (e) {
+                        return void 0 == e && (e = _defaultKey), JSON.parse(sessionStorage.getItem(
+                            _persistenceKey + e))
+                    }, this.removeItem = function (e) {
+                        void 0 == e && (e = _defaultKey), sessionStorage.removeItem(_persistenceKey + e)
+                    })
+                } catch (e) {}
+                this.isAvailable = function () {
+                    return e
+                }
+            }, window.Persistence_windowKey = function (e) {
+                var t = window[e],
+                    i = !1;
+                "object" == typeof t && (i = !0, this.clear = function () {
+                    t[_persistenceKey] = {}
+                }, this.setItem = function (e, i) {
+                    void 0 == i && (i = e, e = _defaultKey), t[_persistenceKey][e] = i
+                }, this.getItem = function (e) {
+                    return void 0 == e && (e = _defaultKey), t[_persistenceKey][e] || null
+                }, this.removeItem = function (e) {
+                    void 0 == e && (e = _defaultKey), delete t[_persistenceKey][e]
+                }, void 0 == t[_persistenceKey] && this.clear()), this.isAvailable = function () {
+                    return i
+                }
+            }, window.Persistence = new Persistence_sessionStorage, Persistence.isAvailable() || (window.Persistence =
+                new Persistence_windowKey("py")), !Persistence.isAvailable()) {
+            var titleStartIndex = window.location.toString().indexOf("title"),
+                titleContentIndex = window.location.toString().indexOf("main", titleStartIndex);
+            titleStartIndex > 0 && titleContentIndex > 0 && titleContentIndex - titleStartIndex < 10 && (window
+                .Persistence = new Persistence_windowKey("qt"))
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    var apiAddress = "localhost:8080";
+    var type = "{{Problem Type}}";
+    var apiURL = "http://" + apiAddress + "/generate/" + type;
+    var problem;
+    var solution;
+    var hasExistingValue = true;
+
+    function fetchProblem() {
+        fetch(apiURL, {
+                "mode": "cors"
+            })
+            .then(function (response) {
+                return response.text()
+            })
+            .then(function (text) {
+                data = JSON.parse(text)
+                problem = data.problem;
+                solution = data.solution;
+                
+                generatedProblem = JSON.stringify({'problem': problem, 'solution': solution});
+                Persistence.setItem(generatedProblem);
+
+                buildProblemAndSolution(problem, solution)
+            })
+            .catch(function (error) {
+                // alert('Request failed'+ error)
+                document.getElementById('problem').innerHTML = "<span style='color:red'>Couldn't fetch problem: " +
+                    error + "</span>";
+            });
+    }
+
+    function buildProblemAndSolution(problem, solution) {
+        renderNodes('problem', problem);
+        renderNodes('solution', solution);
+    }
+
+    function renderNodes(id, nodes) {
+        var elements = [];
+        var parentElement = document.getElementById(id);
+        // Fail gracefully because this function will periodically be called
+        // on nonexistent elements
+        if (!parentElement) {
+            return;
+        }
+        parentElement.innerHTML = ''
+
+        for (var index in nodes) {
+            var node = nodes[index];
+            var builtNode = buildNode(node);
+            if (!builtNode) {
+                continue;
+            }
+            parentElement.appendChild(builtNode);
+            if (index < problem.length - 1) {
+                parentElement.appendChild(document.createElement('br'));
+            }
+        }
+
+        // Make sure that MathJax updates
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+    }
+
+    function buildNode(node) {
+        switch (node.type) {
+            case 'text':
+                return buildTextNode(node)
+                break;
+            case 'graph':
+                return buildGraphNode(node)
+                break;
+            case 'table':
+                return buildTableNode(node)
+                break;
+            default:
+                return null;
+        }
+    }
+
+    function buildTextNode(node) {
+        const element = document.createElement('div')
+        element.innerHTML = node.options.text;
+        return element;
+    }
+
+    function buildGraphNode(node) {
+        const element = document.createElement('div')
+        drawFunctionGraph(element, node.options);
+        return element;
+    }
+
+    function drawFunctionGraph(element, options) {
+
+        if (!options || (!options.functions && !options.tables)) {
+            return;
+        }
+
+        const traces = [];
+        const functions = options.functions;
+        const tables = options.tables;
+
+        const layout = {
+            xaxis: {
+                nticks: 18,
+            },
+            yaxis: {
+                showline: true,
+                nticks: 18,
+            },
+            width: 500,
+            // paper_bgcolor: "#00000000",
+            // plot_bgcolor: "#00000000",
+            // modebar: {
+
+            // }
+        }
+
+        try {
+            if (functions && functions.length > 0) {
+                for (const index in functions) {
+                    // "function" is reserved by JS
+                    const func = functions[index];
+                    const expression = func.expression;
+                    const min = func.min;
+                    const max = func.max;
+                    const step = func.step;
+
+                    const compiledExpression = math.compile(expression)
+
+                    const xValues = math.range(min, max, step).toArray()
+                    const yValues = xValues.map(function (x) {
+                        return compiledExpression.eval({
+                            x: x
+                        })
+                    })
+
+                    const trace = {
+                        x: xValues,
+                        y: yValues,
+                        name: expression,
+                        type: 'scatter'
+                    }
+
+                    traces.push(trace);
+                }
+            }
+
+            if (tables && tables.length > 0) {
+                for (const index in tables) {
+                    const table = tables[index];
+                    const xValues = table.xValues;
+                    const yValues = table.yValues;
+                    const name = table.name ? table.name : 'table ' + (parseInt(index) + 1);
+
+                    const trace = {
+                        x: xValues,
+                        y: yValues,
+                        name: name,
+                        type: 'scatter'
+                    }
+
+                    traces.push(trace);
+                }
+            }
+
+            Plotly.newPlot(element, traces, layout, {
+                displaylogo: false
+            })
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        } catch (err) {
+            console.error(err)
+            element.innerHTML = err
+        }
+    }
+
+    function buildTableNode(node) {
+        const options = node.options;
+
+        const xValues = options.xValues;
+        const yValues = options.yValues;
+        const xLabel = options.xLabel ? options.xLabel : 'x';
+        const yLabel = options.yLabel ? options.yLabel : 'y';
+        const labels = options.labels;
+        const labelsLabel = options.labelsLabel ? options.labelsLabel : '';
+
+        const length = Math.max(xValues.length, yValues.length);
+
+        const rows = [
+            [labelsLabel, xLabel, yLabel]
+        ];
+
+        for (var i = 0; i < length; i++) {
+            var label = labels[i] != null ? labels[i] : '';
+            var x = xValues[i] != null ? xValues[i] : '';
+            var y = yValues[i] != null ? yValues[i] : '';
+            rows.push([label, x, y]);
+        }
+
+        const tableElement = buildTableFromRows(rows);
+
+        const containerElement = document.createElement('div');
+        containerElement.className = "table-container"
+
+        containerElement.appendChild(tableElement);
+        return containerElement;
+    }
+
+    function buildTableFromRows(rows) {
+        const tableElement = document.createElement('table');
+        for (const index in rows) {
+            const row = rows[index];
+            const trElement = document.createElement('tr');
+
+            const cellType = index == 0 ? 'th' : 'td';
+
+            for (const columnIndex in row) {
+                const column = row[columnIndex];
+                const tdElement = document.createElement(cellType);
+                tdElement.innerHTML = column;
+                trElement.appendChild(tdElement);
+            }
+
+            tableElement.appendChild(trElement);
+        }
+        return tableElement;
+    }
+
+    if (Persistence.isAvailable()) { // Check whether Persistence works on the client.
+        problem = Persistence
+    .getItem(); // Retrieve a previously stored number and override the default. (In case this is executed on the backside as well by {{FrontSide}})
+
+        if (problem == null || problem['problem'] == null || problem['solution'] == null) {
+            // document.getElementById('problem-type').innerText = 'I think the problem is null...';
+            hasExistingValue = false;
+            fetchProblem();
+        } else {
+            problemObject = JSON.parse(problem);
+            buildProblemAndSolution(problemObject['problem'], problemObject['solution'])
+        }
+    }
+    
+
+</script>

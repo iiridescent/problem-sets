@@ -1,0 +1,132 @@
+{
+  "defaultSeverity": "warning",
+  "extends": [
+      "tslint:all"
+  ],
+  "jsRules": {},
+  "rules": {
+      "array-type": [
+          true,
+          "array-simple"
+      ],
+      "jsdoc-format": true,
+      "label-position": true,
+      "arrow-return-shorthand": true,
+      "ban": [
+          true,
+          {
+              "name": "parseInt",
+              "message": "tsstyle#type-coercion"
+          },
+          {
+              "name": "parseFloat",
+              "message": "tsstyle#type-coercion"
+          },
+          {
+              "name": "Array",
+              "message": "tsstyle#array-constructor"
+          }
+      ],
+      "semicolon": [
+          true,
+          "always",
+          "ignore-bound-class-methods"
+      ],
+      "radix": true,
+      "trailing-comma": true,
+      "quotemark": [
+          true,
+          "double"
+      ],
+      "ban-types": [
+          true,
+          [
+              "Object",
+              "Use {} instead."
+          ],
+          [
+              "String",
+              "Use 'string' instead."
+          ],
+          [
+              "Number",
+              "Use 'number' instead."
+          ],
+          [
+              "Boolean",
+              "Use 'boolean' instead."
+          ]
+      ],
+      "no-default-export": false,
+      "no-default-import": false,
+      "no-var-keyword": true,
+      "prefer-const": true,
+      "no-console": [
+          true,
+          "warn",
+          "error"
+      ],
+      "variable-name": [
+          true,
+          "check-format",
+          "ban-keywords",
+          "allow-leading-underscore",
+          "allow-trailing-underscore"
+      ],
+      "switch-default": true,
+      "interface-name": [
+          true,
+          "never-prefix"
+      ],
+      "no-inferrable-types": false,
+      "typedef": [
+          true,
+          "call-signature",
+          "arrow-call-signature",
+          "parameter",
+          "arrow-parameter",
+          "property-declaration",
+          "variable-declaration",
+          "member-variable-declaration",
+          "object-destructuring",
+          "array-destructuring"
+      ],
+      "member-ordering": [
+          true,
+          {
+              "order": [
+                  "public-static-field",
+                  "public-instance-field",
+                  "public-constructor",
+                  "private-static-field",
+                  "private-instance-field",
+                  "private-constructor",
+                  "public-instance-method",
+                  "protected-instance-method",
+                  "private-instance-method"
+              ],
+              "alphabetize": false
+          }
+      ],
+      "comment-format": [
+          true,
+          "check-space"
+      ],
+      "only-arrow-functions": [
+          true,
+          "allow-declarations",
+          "allow-named-functions"
+      ],
+      "object-literal-sort-keys": false,
+      "prefer-function-over-method": [
+          true,
+          "allow-protected"
+      ],
+      "triple-equals": [
+          true,
+          "allow-null-check"
+      ],
+      "completed-docs": false
+  },
+  "rulesDirectory": []
+}

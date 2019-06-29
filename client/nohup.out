@@ -1,0 +1,67 @@
+
+NXCLIENT - Version 6.6.8
+
+Usage: nxclient [OPTIONS]
+
+--dialog TYPE [--caption TITLE] [--message MESSAGE] [--local]
+              [--window ID] [--class {info|warning|error}]
+              [--allowmultiple]
+
+  Show a dialog box. The option must be followed by a 'type' parame-
+  ter which specifies the type of dialog.
+
+  TYPE can be either:
+
+  yesno
+  ok
+  error
+  panic
+  quit
+
+  The user should specify a caption and a message to be shown. The
+  option --local can be used to specify the proxy mode.
+
+  The --class option specifies the class of the message. When no class
+  is specified the message will be assumed to be of the class 'Info'. 
+
+  The --allowmultiple option specifies the possibility to launch more
+  than one dialog with the same message.
+
+--monitor
+
+  Run the "NoMachine Monitor" application for tracking users when
+  connected either to the local display or to the master session.
+  This application allows to send a message to the selected user
+  and to disconnect him/her.
+
+--printer PRINTER_NAME
+
+  Show a dialog box with the list of CUPS printer drivers found on
+  the server.
+
+  It may return:
+
+  - Exit code 0 and the name of the driver selected by the user.
+    The name of the driver is written on the STDIN.
+
+  - Exit code 1 in the case of an error. The error message is
+    printed on the STDERR.
+
+  - Exit code 2 and no error message, if the user chose to abort
+    the operation.
+
+--version
+
+  Output version information and exit.
+
+--display
+
+  Specify the X11 display where the client must connect. The option
+  is only useful on platforms where the client is using the X-Window
+  protocol for the display.
+
+All options can be given with a single dash (as in 'nxclient -help').
+This is for backward compatibility with older versions. Note that the
+single-dash format is deprecated and will be likely removed in future
+versions.
+

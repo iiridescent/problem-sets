@@ -1,0 +1,35 @@
+.card {
+    font-family: "Lato", "Open Sans", arial, sans-serif;
+    font-size: 15pt;
+    text-align: center;
+    color: black;
+    background-color: white;
+}
+
+#problem>* {
+    display: inline-block;
+    margin-top: 1em;
+}
+
+.table-container table, .table-container td, .table-container th {
+    border: 1px solid lightgrey;
+    color: #212121;
+    padding: 4pt 8pt;
+    margin: 0;
+    border-collapse: collapse;
+}
+
+.table-container th {
+    border: none;
+    background-color: lightgray;
+}
+
+#parent>*:first-child {
+    margin-top: 0;
+}
+
+.table-container {
+    background-color: #fff;
+    padding: 8pt;
+    font-size: 14pt;
+}
