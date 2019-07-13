@@ -1,19 +1,24 @@
 #%%
 
-# from IPython.lib.deepreload import reload
+from IPython.lib.deepreload import reload
 # %load_ext autoreload
 
 from IPython.display import Latex, Markdown
 from numpy import round
 from math import ceil, e
 
+
 #%%
 # %autoreload 2
+
+import os
+# sys.path.insert(0, )
+
 from numpy.random import choice, randint
 
 from problem import Problem
 from testbed_utils import render_problem
-from util import fmath, mfrac
+from util import fmath, mfrac, fprice
 from widget import TextWidgetOptions, Widget
 
 p = 50 * randint(1, 21)

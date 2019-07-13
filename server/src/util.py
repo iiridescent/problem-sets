@@ -1,15 +1,18 @@
 from fractions import Fraction
 from numbers import Number
 from numpy import round
+from enum import Enum
 
 
-def fmath(value):
+def fmath(value, debug=False):
     value = (
         value.replace("%", "\%")
         .replace("$", "\$")
         # .replace("{", "\{")
         # .replace("}", "\}")
     )
+    if debug == True:
+        return f"${value}$"
     return f"\\({value}\\)"
 
 
@@ -88,3 +91,8 @@ def pluralize(singular: str, plural: str, num: Number):
         return singular
 
     return plural
+
+
+class Axis(Enum):
+    x = 0
+    y = 1

@@ -1,6 +1,6 @@
 from problem import Problem
 from widget import Widget, TextWidgetOptions
-from IPython.display import Markdown
+from IPython.display import Markdown, Latex
 from typing import List
 
 def render_problem(problem: Problem):
@@ -12,6 +12,10 @@ def render_problem(problem: Problem):
     body += widgets_to_string(problem.solution)
 
     return Markdown(body)
+
+
+def render_latex(content: str):
+    return Latex(str)
 
 
 def widgets_to_string(widgets):

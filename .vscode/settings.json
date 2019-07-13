@@ -1,0 +1,6 @@
+{
+    "python.autoComplete.extraPaths": [
+        "${workspaceFolder}"
+    ],
+    "python.dataScience.jupyterServerURI": "http://localhost:8888/?token=bd4ea1d82ff28dbd8bc840cf13ef9ab6d5bce2ad38cc0ee7"
+}

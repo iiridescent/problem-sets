@@ -226,4 +226,3 @@ def f_present_value_discrete(a: Number, r: Number, n: Number, t: Number = 1):
 
 def f_present_value_continuous(a: Number, r: Number, t: Number = 1):
     return a * e ** (-r * t)
-
