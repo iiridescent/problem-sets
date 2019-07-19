@@ -2,8 +2,8 @@ from sympy import symbols, Poly, Rational, latex
 from numpy import random, around, arange
 from numpy.random import randint
 from problem import create_full_text_problem
-from problem_manager import problem_type
-from testbed_utils import render_problem
+from problem_generator_manager import problem_type
+from testbed_utils import render_debug_problem
 from util import fmath
 
 """

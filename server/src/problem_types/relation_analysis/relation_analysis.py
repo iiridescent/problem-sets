@@ -4,7 +4,7 @@ from typing import List
 
 from problem import Problem
 
-from problem_manager import problem_type
+from problem_generator_manager import problem_type
 from util import fmath
 from widget import Widget, build_text_widget_options
 

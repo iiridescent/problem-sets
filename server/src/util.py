@@ -2,17 +2,22 @@ from fractions import Fraction
 from numbers import Number
 from numpy import round
 from enum import Enum
+from environment import Environment
 
 
-def fmath(value, debug=False):
+class Axis(Enum):
+    x = 0
+    y = 1
+
+
+def fmath(value):
+    if isinstance(value, Number):
+        value = str(value)
     value = (
-        value.replace("%", "\%")
-        .replace("$", "\$")
+        value.replace("%", "\%").replace("$", "\$")
         # .replace("{", "\{")
         # .replace("}", "\}")
     )
-    if debug == True:
-        return f"${value}$"
     return f"\\({value}\\)"
 
 
@@ -93,6 +98,14 @@ def pluralize(singular: str, plural: str, num: Number):
     return plural
 
 
-class Axis(Enum):
-    x = 0
-    y = 1
+def move_point_along_axis(p: (Number, Number), m: Number, axis: Axis):
+    if not p or not m or not axis:
+        raise ValueError()
+
+    if axis == Axis.y:
+        p[1] += m
+    elif axis == Axis.x:
+        p[0] += m
+
+    return p
+

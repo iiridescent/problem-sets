@@ -26,6 +26,10 @@ class ProblemType:
         }
 
 
+def generate_problem_of_type(type: str):
+    return registered_problem_types[type].fun()
+
+
 def problem_type(name=None, description=None, source=None):
     """ Annotation for registering problem """
 
@@ -61,7 +65,7 @@ def problem_types_paths():
     return problem_directories
 
 
-def load_problems():
+def load_generators():
     problem_types = problem_types_paths()
 
     loaded_problems_types = []

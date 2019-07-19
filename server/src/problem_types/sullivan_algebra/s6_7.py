@@ -5,8 +5,8 @@ from numpy import linspace
 from numpy.random import choice, randint
 
 from problem import Problem, create_full_text_problem
-from problem_manager import problem_type
-from testbed_utils import render_problem
+from problem_generator_manager import problem_type
+from testbed_utils import render_debug_problem
 from util import fcur, fmath, fper, iiw, mfrac, pluralize
 from widget import TextWidgetOptions, Widget
 from numbers import Number

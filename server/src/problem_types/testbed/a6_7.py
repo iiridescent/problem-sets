@@ -17,7 +17,7 @@ import os
 from numpy.random import choice, randint
 
 from problem import Problem
-from testbed_utils import render_problem
+from testbed_utils import render_debug_problem
 from util import fmath, mfrac, fprice
 from widget import TextWidgetOptions, Widget
 
@@ -52,7 +52,7 @@ solution = Widget(TextWidgetOptions(solution_text))
 
 problem = Problem(content, [solution])
 
-render_problem(problem)
+render_debug_problem(problem)
 #%%
 
 
@@ -91,7 +91,7 @@ def compound_interest_find_p():
     return Problem(content, [solution])
 
 
-render_problem(compound_interest_find_p())
+render_debug_problem(compound_interest_find_p())
 #%%
 # %autoreload 2
 
@@ -137,7 +137,7 @@ def compound_interest_continuous_find_p():
     return Problem(content, [solution])
 
 
-render_problem(compound_interest_continuous_find_p())
+render_debug_problem(compound_interest_continuous_find_p())
 
 #%%
 
@@ -173,7 +173,7 @@ def compound_interest_discrete_find_effective_roi():
     return Problem(content, [solution])
 
 
-render_problem(compound_interest_discrete_find_effective_roi())
+render_debug_problem(compound_interest_discrete_find_effective_roi())
 
 #%%
 
@@ -203,7 +203,7 @@ def compound_interest_continuous_find_effective_roi():
     return Problem(content, [solution])
 
 
-render_problem(compound_interest_continuous_find_effective_roi())
+render_debug_problem(compound_interest_continuous_find_effective_roi())
 
 #%%
 
@@ -292,4 +292,4 @@ def compound_interest_compare_discrete_vs_discrete():
     return Problem(content, [solution])
 
 
-render_problem(compound_interest_compare_discrete_vs_discrete())
+render_debug_problem(compound_interest_compare_discrete_vs_discrete())

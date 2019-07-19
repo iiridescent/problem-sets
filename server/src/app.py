@@ -9,7 +9,7 @@ from typing import List
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-import problem_manager
+import problem_sets
 from problem import Problem
 from widget import Widget
 
@@ -45,16 +45,16 @@ def hello(problem_type):
         arg_value_formatted = format_arg(args[arg_key])
         args_formatted[arg_formatted] = arg_value_formatted
 
-    response = problem_manager.registered_problem_types[problem_type].fun(
-        **args_formatted
-    )
+    response = problem_sets.problem(problem_type)
     response_serialized = response.serialize()
+
+    print(response.debug_info)
 
     return jsonify(response_serialized)
 
 
 def main():
-    problem_manager.load_problems()
+    problem_sets.initialize()
     app.run(host="0.0.0.0", port=5000, debug=True)
 
 

@@ -3,7 +3,7 @@ import random
 from problem import Problem
 from util import fmath
 from widget import Widget, build_text_widget_options
-from problem_manager import problem_type
+from problem_generator_manager import problem_type
 
 @problem_type(
     description="Add two integers",

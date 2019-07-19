@@ -4,7 +4,7 @@ from typing import List
 
 from problem import Problem, create_full_text_problem
 
-from problem_manager import problem_type
+from problem_generator_manager import problem_type
 from util import fmath, ord
 from widget import Widget
 

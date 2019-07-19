@@ -41,7 +41,7 @@ from sympy import symbols, Poly, Rational, latex
 from numpy import random, around, arange
 from numpy.random import randint, rand
 from problem import create_full_text_problem
-from testbed_utils import render_problem
+from testbed_utils import render_debug_problem
 from util import fmath
 
 def polynomial_function_find_negative():
@@ -75,7 +75,7 @@ def polynomial_function_find_negative():
 
     return create_full_text_problem([question], [answer])
 
-render_problem(polynomial_function_find_negative())
+render_debug_problem(polynomial_function_find_negative())
 
 #%% [markdown]
 # ### Complete the square
@@ -157,7 +157,7 @@ def quadratic_function_find_vertex_intercept_form():
 
     return create_full_text_problem([problem_content], [problem_solution])
 
-render_problem(quadratic_function_find_vertex_intercept_form())
+render_debug_problem(quadratic_function_find_vertex_intercept_form())
 
 #%% [markdown]
 # ### Finding vertex given quadratic

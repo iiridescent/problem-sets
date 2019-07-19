@@ -2,7 +2,7 @@ from sympy import symbols, Poly, Rational, latex
 from numpy import random, around, arange
 from numpy.random import randint
 from problem import create_full_text_problem
-from testbed_utils import render_problem
+from testbed_utils import render_debug_problem
 from util import fmath
 
 #%%
@@ -37,6 +37,6 @@ def polynomial_function_find_negative():
 
     return create_full_text_problem([question], [answer])
 
-render_problem(polynomial_function_find_negative())
+render_debug_problem(polynomial_function_find_negative())
 
 #%%
