@@ -1,8 +1,10 @@
-from problem import Problem
-from widget import Widget, TextWidgetOptions
-from IPython.display import Markdown, Latex
+from problem_sets.problem import Problem
+from problem_sets.widget import Widget, TextWidgetOptions
+from IPython.display import display, Markdown, Latex
+from IPython import get_ipython
 from typing import List
-from environment import Environment
+from types import FunctionType
+from problem_sets.environment import Environment
 
 class DebugProblemWrapper:
     def __init__(self, debug_info: [str], problem: Problem):
@@ -49,3 +51,13 @@ def widgets_to_string(widgets):
             body += text + "\n\n"
     # Get rid of the last newline at the end
     return body[:-2]
+
+
+def debug(fun: FunctionType):
+    """
+    Given a problem generator function 'fun', render its output.
+    """
+    # Check if IPython frontend is available to render problem
+    if get_ipython() is not None:
+        display(render_testbed_problem(fun))
+    return fun

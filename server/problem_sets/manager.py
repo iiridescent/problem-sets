@@ -3,10 +3,17 @@ import os
 from sys import stderr
 from dataclasses import dataclass
 from types import FunctionType
+from problem_sets.environment import Environment
+from problem_sets.testbed import render_testbed_problem
+
+PROBLEM_SETS = "problem_sets"
 
 PROBLEM_TYPES = "problem_types"
 
 registered_problem_types = {}
+
+# default environment is production
+env = Environment.prod
 
 @dataclass
 class ProblemType:
@@ -16,6 +23,8 @@ class ProblemType:
     name: str
     description: str
     source: str
+    # If true, this problem will only be available when the global environemnt is set to debug
+    debug: bool
 
     def serialize(self):
         return {
@@ -23,6 +32,7 @@ class ProblemType:
             "fun": self.fun,
             "description": self.description,
             "source": self.source,
+            "debug": self.debug,
         }
 
 
@@ -30,14 +40,23 @@ def generate_problem_of_type(type: str):
     return registered_problem_types[type].fun()
 
 
-def problem_type(name=None, description=None, source=None):
+def available_types():
+    return registered_problem_types
+
+
+def problem_type(name=None, description=None, source=None, debug=False):
     """ Annotation for registering problem """
 
     def inner(fun: FunctionType):
         nonlocal name
         name = name if name != None else fun.__name__.replace("_", "-")
-        problem_type = ProblemType(fun, name, description, source)
+        problem_type = ProblemType(fun, name, description, source, debug)
+        if debug and env == Environment.prod:
+            return fun
+        
         register_problem(problem_type)
+
+        return fun
 
     return inner
 
@@ -65,13 +84,16 @@ def problem_types_paths():
     return problem_directories
 
 
-def load_generators():
+def load_types(environment: Environment=Environment.prod):
+    global env
+    env = environment
+
     problem_types = problem_types_paths()
 
     loaded_problems_types = []
 
     for problem_source in problem_types:
-        package = PROBLEM_TYPES + "." + problem_source
+        package = f"{PROBLEM_SETS}.{PROBLEM_TYPES}.{problem_source}"
 
         try:
             loaded_type = importlib.import_module(package)

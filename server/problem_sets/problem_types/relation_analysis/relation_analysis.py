@@ -2,11 +2,7 @@ import math
 from random import Random
 from typing import List
 
-from problem import Problem
-
-from problem_generator_manager import problem_type
-from util import fmath
-from widget import Widget, build_text_widget_options
+from problem_sets import Problem, problem_type, fmath, Widget, build_text_widget_options
 
 # Arbitrary number to keep while loops from hanging in rare cases
 MAX_RANDOM_TRIES = 50

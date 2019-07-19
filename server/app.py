@@ -9,9 +9,10 @@ from typing import List
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-import problem_sets
-from problem import Problem
-from widget import Widget
+import problem_sets as sets
+from problem_sets import Environment, Problem, Widget
+from json import dumps
+
 
 app = Flask(__name__)
 CORS(app)
@@ -38,23 +39,24 @@ def format_arg(arg):
 
 @app.route("/generate/<problem_type>")
 def hello(problem_type):
-    args = request.args.to_dict()
-    args_formatted = {}
-    for arg_key in args:
-        arg_formatted = format_arg_key(arg_key)
-        arg_value_formatted = format_arg(args[arg_key])
-        args_formatted[arg_formatted] = arg_value_formatted
+    # args = request.args.to_dict()
+    # args_formatted = {}
+    # for arg_key in args:
+    #     arg_formatted = format_arg_key(arg_key)
+    #     arg_value_formatted = format_arg(args[arg_key])
+    #     args_formatted[arg_formatted] = arg_value_formatted
 
-    response = problem_sets.problem(problem_type)
+    response = sets.generate_problem(problem_type)
     response_serialized = response.serialize()
 
-    print(response.debug_info)
+    print(dumps(response.debug_info, indent=4, separators=(",", ": ")))
 
     return jsonify(response_serialized)
 
 
 def main():
-    problem_sets.initialize()
+    sets.initialize(Environment.debug)
+    print("hreat")
     app.run(host="0.0.0.0", port=5000, debug=True)
 
 

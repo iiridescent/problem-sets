@@ -1,19 +1,9 @@
 from sympy import symbols, Poly, Rational, latex
 from numpy import random, around, arange
 from numpy.random import randint
-from problem import create_full_text_problem
-from problem_generator_manager import problem_type
-from testbed_utils import render_debug_problem
-from util import fmath
+from problem_sets import create_full_text_problem, render_debug_problem, fmath
 
-"""
-5.5: The Real Zeros of a Polynomial Function
-"""
-
-@problem_type(
-    description="Given a polynomial function $f(x)$, find $f(-x)",
-    source="Sullivan Algebra 5.5"
-)
+#%%
 def polynomial_function_find_negative():
 
     max_coeff_abs = 144
@@ -44,3 +34,7 @@ def polynomial_function_find_negative():
     answer = fmath("f(-x) = "+latex(neg_expr))
 
     return create_full_text_problem([question], [answer])
+
+render_debug_problem(polynomial_function_find_negative())
+
+#%%

@@ -1,25 +1,19 @@
 import random
 
-from problem import Problem
-from util import fmath
-from widget import Widget, build_text_widget_options
-from problem_generator_manager import problem_type
+from problem_sets import Problem, fmath, problem_type, Widget, build_text_widget_options
 
-@problem_type(
-    description="Add two integers",
-    source="Created by Thomas Howe"
-)
+@problem_type(description="Add two integers", source="Created by Thomas Howe")
 def addition_integers(length=2, low=1, high=10) -> Problem:
     length = int(length)
     low = int(low)
     high = int(high)
     if length < 2:
-        raise ValueError('addition problem must have length of 2')
+        raise ValueError("addition problem must have length of 2")
 
     if low > high:
-        raise ValueError('max must be greater than or equal to min')
+        raise ValueError("max must be greater than or equal to min")
 
-    equation = ''
+    equation = ""
     sum = 0
 
     for i in range(length):
@@ -27,10 +21,10 @@ def addition_integers(length=2, low=1, high=10) -> Problem:
         equation += str(value)
         sum += value
         if i < length - 1:
-            equation += '+'
+            equation += "+"
 
     problem_value = fmath(equation)
-    solution_value = '\({}\)'.format(sum)
+    solution_value = "\\({}\\)".format(sum)
     problem_widget = Widget(build_text_widget_options(problem_value))
     solution_widget = Widget(build_text_widget_options(solution_value))
 

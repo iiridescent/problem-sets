@@ -8,7 +8,7 @@ from IPython.lib.deepreload import reload
 
 from IPython.display import Latex, Markdown
 
-from util import fmath
+from util import fexpprod, froot, ffrac, fper, fmath, fcur
 from sympy import Expr, symbols, latex
 from numpy import arccos, arcsin, arctan, around
 from numpy.random import randint, choice
@@ -17,7 +17,7 @@ from testbed_utils import render_latex, render_testbed_problem, DebugProblemWrap
 from enum import Enum
 from environment import Environment
 from problem import create_full_text_problem
-from problem_generator_manager import problem_type
+from problem_type_manager import problem_type
 from fractions import Fraction
 
 #%%

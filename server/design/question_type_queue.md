@@ -56,7 +56,7 @@ Find the better deal.
 
 ### 3.2
 
-#### find_trig_func_arc_inverse_with_calculator
+#### x find_trig_func_arc_inverse_with_calculator
 
 Generate something in the domain of one of these functions:
 

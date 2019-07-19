@@ -4,11 +4,20 @@ from random import getrandbits, sample
 from numpy import linspace
 from numpy.random import choice, randint
 
-from problem import Problem, create_full_text_problem
-from problem_generator_manager import problem_type
-from testbed_utils import render_debug_problem
-from util import fcur, fmath, fper, iiw, mfrac, pluralize
-from widget import TextWidgetOptions, Widget
+from problem_sets import (
+    Problem,
+    create_full_text_problem,
+    problem_type,
+    render_testbed_problem,
+    fcur,
+    fmath,
+    fper,
+    iiw,
+    ffrac,
+    fplural,
+    TextWidgetOptions,
+    Widget,
+)
 from numbers import Number
 
 compounding_choices = {
@@ -37,11 +46,11 @@ def compound_interest_discrete_find_a():
 
     a = f_compound_interest_discrete(p, r, n, t)
 
-    year_word = pluralize("year", "years", t)
+    year_word = fplural("year", "years", t)
 
     problem_instruction = "Find the amount that results from this following investment:"
 
-    problem_text = f"{fmath(fcur(p))} invested at {fmath(fcur(r))} compounded {compounding_choices[n]} after a period of {fmath(mfrac(t))} {year_word}"
+    problem_text = f"{fmath(fcur(p))} invested at {fmath(fcur(r))} compounded {compounding_choices[n]} after a period of {fmath(ffrac(t))} {year_word}"
 
     solution_text = fmath(fcur(a))
 
@@ -65,11 +74,11 @@ def compound_interest_discrete_find_p():
 
     p = round(f_present_value_discrete(a, r, n, t), 2)
 
-    year_word = pluralize("year", "years", t)
+    year_word = fplural("year", "years", t)
 
     problem_instruction = "Find the present value of this investment:"
 
-    problem_text = f"To get {fmath(fcur(a))} after {fmath(mfrac(t))} {year_word} at {fmath(fper(r))} compounded {compounding_choices[n]}"
+    problem_text = f"To get {fmath(fcur(a))} after {fmath(ffrac(t))} {year_word} at {fmath(fper(r))} compounded {compounding_choices[n]}"
 
     solution_text = fmath(fcur(p))
 
@@ -96,7 +105,7 @@ def compound_interest_continuous_find_p():
 
     problem_instruction = "Find the present value of this investment:"
 
-    problem_text = f"To get {fmath(fcur(a))} after {fmath(mfrac(t))} year{plural_end} at {fmath(fper(r))} compounded continuously"
+    problem_text = f"To get {fmath(fcur(a))} after {fmath(ffrac(t))} year{plural_end} at {fmath(fper(r))} compounded continuously"
 
     solution_text = fmath(fcur(p))
 

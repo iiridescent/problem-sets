@@ -1,5 +1,5 @@
-from typing import List
-from widget import Widget, TextWidgetOptions
+from typing import List, Union
+from problem_sets.widget import Widget, TextWidgetOptions
 
 
 class Problem:
@@ -43,11 +43,13 @@ class Problem:
 
         return widget_dict
 
-def create_full_text_problem(content: List[str], solution: List[str], debug_info: List[dict]=None, **pargs):
-    def process_strings_to_text_widgets(strings: List[str]):
+def create_full_text_problem(content: Union[List[str], str], solution: Union[List[str], str], debug_info: List[dict]=None, **pargs):
+    def process_strings_to_text_widgets(lines: Union[List[str], str]):
+        lines = lines if isinstance(lines, List) else [lines]
+
         widgets = []
-        for string in strings:
-            widgets.append(Widget(TextWidgetOptions(string)))
+        for line in lines:
+            widgets.append(Widget(TextWidgetOptions(line)))
         return widgets
 
     content_widgets = process_strings_to_text_widgets(content)

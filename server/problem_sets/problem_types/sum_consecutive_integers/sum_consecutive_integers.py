@@ -2,11 +2,7 @@ import math
 from random import Random
 from typing import List
 
-from problem import Problem, create_full_text_problem
-
-from problem_generator_manager import problem_type
-from util import fmath, ord
-from widget import Widget
+from problem_sets import Problem, create_full_text_problem, problem_type, fmath, ford, Widget
 
 @problem_type(
     description="$a$ is the sum of $n$ consecutive integers, find the $m$th",
@@ -27,7 +23,7 @@ def sum_consecutive_integers(integer_count: bool = None, max_initial_integer: in
 
     nth_integer_to_find = Random().randint(1, integer_count)
 
-    ordinal_number = str(nth_integer_to_find) + ord(nth_integer_to_find)
+    ordinal_number = ford(nth_integer_to_find)
 
     question_label = f"The number {fmath(final_integer)} is the sum of {fmath(integer_count)} consecutive integers. What is the {ordinal_number}?"
 

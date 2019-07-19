@@ -17,8 +17,8 @@ import os
 from numpy.random import choice, randint
 
 from problem import Problem
-from testbed_utils import render_debug_problem
-from util import fmath, mfrac, fprice
+from testbed_utils import render_testbed_problem
+from util import fmath, ffrac, fprice
 from widget import TextWidgetOptions, Widget
 
 p = 50 * randint(1, 21)
@@ -39,7 +39,7 @@ plural_end = "s" if t != 1 else ""
 
 problem_instruction = "Find the amount that results from the following investment:"
 
-problem_text = rf"$\${p}$ invested at ${int(r*100)}\%$ compounded {compounding_choices[n]} after a period of ${mfrac(t)}$ year{plural_end}"
+problem_text = rf"$\${p}$ invested at ${int(r*100)}\%$ compounded {compounding_choices[n]} after a period of ${ffrac(t)}$ year{plural_end}"
 
 solution_text = rf"$\${a}$"
 
@@ -52,7 +52,7 @@ solution = Widget(TextWidgetOptions(solution_text))
 
 problem = Problem(content, [solution])
 
-render_debug_problem(problem)
+render_testbed_problem(problem)
 #%%
 
 
