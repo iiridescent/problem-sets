@@ -1,12 +1,13 @@
+from enum import Enum
 from fractions import Fraction
 from numbers import Number
+
 from numpy import around
-from numpy.random import randint, choice
-from enum import Enum
-from problem_sets.environment import Environment
-from typing import Union, Tuple, List
 from sympy import root as sp_root, latex as sp_latex
-from problem_sets.math import ord
+from typing import Union, Tuple
+
+from problem_sets.gen.math import ord
+
 
 def fmath(value):
     """
@@ -89,7 +90,7 @@ def ffrac(num: Union[Number, Tuple[Number, Number]], mixed=True):
     return output
 
 
-#%%
+# %%
 def froot(root: Number, degree: Number = 2, simplify=True):
     """
     Format ROOT
@@ -143,9 +144,9 @@ class LatexBracket(Enum):
 
 
 def fbra(
-    value: Union[str, Number],
-    bracket: LatexBracket = LatexBracket.round,
-    tall=False,
+        value: Union[str, Number],
+        bracket: LatexBracket = LatexBracket.round,
+        tall=False,
 ):
     """
     Format BRAcket

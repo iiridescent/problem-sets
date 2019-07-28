@@ -2,9 +2,9 @@ import math
 from random import Random
 from typing import List
 
-from problem_sets import Problem, create_full_text_problem, problem_type, fmath, ford, Widget
+from problem_sets import Problem, create_full_text_problem, gen, fmath, ford, Widget
 
-@problem_type(
+@gen(
     description="$a$ is the sum of $n$ consecutive integers, find the $m$th",
     source="Created by Thomas Howe"
 )

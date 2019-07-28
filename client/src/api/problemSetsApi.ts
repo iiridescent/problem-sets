@@ -1,14 +1,17 @@
-import { Problem } from '@/store';
+import { GeneratedProblem } from "@/store";
 
 export class ProblemSetsAPI {
-    public static API_URL: string = 'localhost:5000';
+    // Need to figure out how to make this dynamic
+    public static API_URL: string = "localhost:5000/api";
+
+    public static PROBLEM_SUFFIX: string = "problem";
 
     public async loadProblemsOfTypes(
         types: string | string[],
         count: number = 10
-    ): Promise<Problem[]> {
-        const problems: Problem[] = [];
-        for (let i = 0; i < count; i++) {
+    ): Promise<GeneratedProblem[]> {
+        const problems: GeneratedProblem[] = [];
+        for (let i: number = 0; i < count; i++) {
             let selectedType: string;
             if (Array.isArray(types)) {
                 const selectedIndex: number = Math.round(
@@ -19,16 +22,16 @@ export class ProblemSetsAPI {
                 selectedType = types;
             }
 
-            const problem: Problem = await this.loadProblem(selectedType);
+            const problem: GeneratedProblem = await this.loadProblem(selectedType);
             problems.push(problem);
         }
 
         return problems;
     }
 
-    public async loadProblem(type: string): Promise<Problem> {
+    public async loadProblem(type: string): Promise<GeneratedProblem> {
         const response: Response = await fetch(
-            `http://${ProblemSetsAPI.API_URL}/generate/${type}`
+            `http://${ProblemSetsAPI.API_URL}/${ProblemSetsAPI.PROBLEM_SUFFIX}/${type}`
         );
 
         if (!response.ok) {
@@ -41,7 +44,7 @@ export class ProblemSetsAPI {
         }
 
         // tslint:disable-next-line: no-unsafe-any
-        const json: Problem = await response.json();
+        const json: GeneratedProblem = await response.json();
 
         return json;
 

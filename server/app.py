@@ -10,7 +10,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 import problem_sets as sets
-from problem_sets import Environment, Problem, Widget
+from problem_sets import Environment, problem
 from json import dumps
 
 
@@ -37,8 +37,8 @@ def format_arg(arg):
     return arg.replace("<br>", "")
 
 
-@app.route("/generate/<problem_type>")
-def hello(problem_type):
+@app.route("/api/problem/<set_id>")
+def hello(set_id):
     # args = request.args.to_dict()
     # args_formatted = {}
     # for arg_key in args:
@@ -46,23 +46,20 @@ def hello(problem_type):
     #     arg_value_formatted = format_arg(args[arg_key])
     #     args_formatted[arg_formatted] = arg_value_formatted
 
-    response = sets.generate_problem(problem_type)
+    response = sets.problem(set_id)
     response_serialized = response.serialize()
 
     print(dumps(response.debug_info, indent=4, separators=(",", ": ")))
+
+    print(response_serialized)
 
     return jsonify(response_serialized)
 
 
 def main():
     sets.initialize(Environment.debug)
-    print("hreat")
     app.run(host="0.0.0.0", port=5000, debug=True)
 
 
 if __name__ == "__main__":
     main()
-
-#%%%
-
-#%%

@@ -1,38 +1,35 @@
-#%%
-
-#%load_ext autoreload
+# %load_ext autoreload
 # %autoreload 2
 
-from problem_sets import (
+from fractions import Fraction
+
+from numpy import arccos, arcsin, arctan, around
+from numpy.random import choice, seed
+
+from problem_sets.gen import (
     fmath,
-    fexpprod,
     ffrac,
-    fsign,
     froot,
     fbra,
     ftrigfun,
     LatexTrigFunction,
     randint_gap_tuple,
     sign,
-    Problem,
-    create_full_text_problem,
-    problem_type,
-    render_testbed_problem,
+    gen,
     pick_from_list,
-    debug
+    debug,
+    Environment,
+    build_gen_problem_content
 )
-from numpy import arccos, arcsin, arctan, around
-from numpy.random import randint, choice
-from fractions import Fraction
 
-#%%
 
-@debug
-@problem_type(source="Sullivan Trigonometry 3.2, 35-56", debug=True)
+@debug(1846185783)
+@gen(source="Sullivan Trigonometry 3.2, 35-56", target_env=Environment.debug)
 def find_trig_func_arc_inverse_with_calculator():
     problem_instruction = "Use a calculator to find the value of this expression rounded to two decimal places:"
 
-    # schema: latex insert (superscript -1 is added for all of them), function, whether or not there's a gap from -1 to 1
+    # schema: latex insert (superscript -1 is added for all of them), function,
+    # whether or not there's a gap from -1 to 1
     functions = [
         (LatexTrigFunction.arccsc, lambda x: arcsin(1 / x), True),
         (LatexTrigFunction.arcsec, lambda x: arccos(1 / x), True),
@@ -81,10 +78,10 @@ def find_trig_func_arc_inverse_with_calculator():
             )
         elif picked_number_type == "sqrt":
             square = choice(sqrt_range)
-            return (square, froot(square))
+            return square, froot(square)
         elif picked_number_type == "whole":
             whole_number = randint_gap_tuple(whole_range, domain_gap)
-            return (whole_number, str(whole_number))
+            return whole_number, str(whole_number)
 
     picked_number = pick_number()
 
@@ -104,6 +101,6 @@ def find_trig_func_arc_inverse_with_calculator():
         {"picked number": picked_number[1]},
     ]
 
-    return create_full_text_problem(
+    return build_gen_problem_content(
         [problem_instruction, problem_text], solution_text, debug_info
     )

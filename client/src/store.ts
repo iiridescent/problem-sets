@@ -1,4 +1,4 @@
-import { Problem } from './store';
+import { GeneratedProblem } from './store';
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
@@ -21,10 +21,11 @@ export interface AppState {
 }
 
 export interface CurrentSession {
-  problems: Problem[];
+  problems: GeneratedProblem[];
 }
+
 // TODO: Move types to their own files
-export interface Problem {
+export interface GeneratedProblem {
   content: Widget[];
   solution: Widget[];
 }

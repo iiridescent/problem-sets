@@ -1,10 +1,9 @@
 from problem_sets.problem import Problem
-from problem_sets.widget import Widget, TextWidgetOptions
+from problem_sets.gen.widget import TextWidgetOptions
 from IPython.display import display, Markdown, Latex
 from IPython import get_ipython
-from typing import List
 from types import FunctionType
-from problem_sets.environment import Environment
+
 
 class DebugProblemWrapper:
     def __init__(self, debug_info: [str], problem: Problem):
@@ -12,16 +11,19 @@ class DebugProblemWrapper:
         self.problem = problem
 
 
-def render_testbed_problem(problem_fn):
+def render_testbed_problem(problem_fn, random_seed=None):
 
-    problem = problem_fn()
-
+    problem = problem_fn(random_seed)
     debug_info = problem.debug_info
+    random_seed = problem.random_seed
 
     body = ""
 
-    if debug_info:
+    if debug_info or random_seed:
         body += "### debug info:\n\n"
+
+        if random_seed:
+            body += f"random seed: {random_seed}\n\n"
 
         for line in debug_info:
             body += f"{line}\n\n"
@@ -32,9 +34,9 @@ def render_testbed_problem(problem_fn):
     body += "\n\n### solution:\n\n"
     body += widgets_to_string(problem.solution)
 
-    body = body.replace('\\(', '$').replace('\\)', '$')
+    body = body.replace("\\(", "$").replace("\\)", "$")
 
-    return Markdown(body)
+    display(Markdown(body))
 
 
 def render_latex(content: str):
@@ -53,11 +55,14 @@ def widgets_to_string(widgets):
     return body[:-2]
 
 
-def debug(fun: FunctionType):
+def debug(random_seed=None):
     """
-    Given a problem generator function 'fun', render its output.
+    Decorator: given a problem generator function 'fun', render its output.
     """
-    # Check if IPython frontend is available to render problem
-    if get_ipython() is not None:
-        display(render_testbed_problem(fun))
-    return fun
+    def inner(fun: FunctionType):
+        if get_ipython() is not None:
+            render_testbed_problem(fun, random_seed)
+            
+        return fun
+
+    return inner

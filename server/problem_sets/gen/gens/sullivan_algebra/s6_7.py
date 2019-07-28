@@ -7,7 +7,7 @@ from numpy.random import choice, randint
 from problem_sets import (
     Problem,
     create_full_text_problem,
-    problem_type,
+    gen,
     render_testbed_problem,
     fcur,
     fmath,
@@ -31,7 +31,7 @@ compounding_choices = {
 compounding_n_choices = list(compounding_choices.keys())
 
 
-@problem_type(
+@gen(
     description="Find the amount $A$ that results from an investment that compounds discretely.",
     source="Sullivan Algebra 6.7 7-14",
 )
@@ -59,7 +59,7 @@ def compound_interest_discrete_find_a():
     )
 
 
-@problem_type(
+@gen(
     description="Find the present value (principal) $P$ of an investment that compounds discretely.",
     source="Sullivan Algebra 6.7 15-20",
 )
@@ -87,7 +87,7 @@ def compound_interest_discrete_find_p():
     )
 
 
-@problem_type(
+@gen(
     description="Find the present value (principal) $p$ of an investment that compounds continuously.",
     source="Sullivan Algebra 6.7 21-22",
 )
@@ -114,7 +114,7 @@ def compound_interest_continuous_find_p():
     )
 
 
-@problem_type(
+@gen(
     description="Find the effective return on investment $r_e$ of an investment that compounds discretely.",
     source="Sullivan Algebra 6.7 23-24",
 )
@@ -136,7 +136,7 @@ def compound_interest_discrete_find_effective_roi():
     )
 
 
-@problem_type(
+@gen(
     description="Find the effective return on investment $r_e$ of an investment that compounds continuously.",
     source="Sullivan Algebra 6.7 25-26",
 )
@@ -156,7 +156,7 @@ def compound_interest_continuous_find_effective_roi():
     )
 
 
-@problem_type(
+@gen(
     description="Find the highest effective interest rate between two investments that compound discretely.",
     source="Sullivan Algebra 6.7 27-30",
 )

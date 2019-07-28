@@ -11,6 +11,8 @@
       ],
       "jsdoc-format": true,
       "label-position": true,
+      "linebreak-style": false,
+      "increment-decrement": false,
       "arrow-return-shorthand": true,
       "ban": [
           true,

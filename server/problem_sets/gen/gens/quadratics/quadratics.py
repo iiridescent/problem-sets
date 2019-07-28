@@ -4,7 +4,7 @@ from typing import List
 from numpy.random import rand, randint
 from sympy import (Expr, Poly, Rational, UnevaluatedExpr, expand, latex, poly, solve, symbols)
 
-from problem_sets import Problem, create_full_text_problem, problem_type, fmath
+from problem_sets import Problem, create_full_text_problem, gen, fmath
 
 @dataclass
 class Quadratic:
@@ -75,7 +75,7 @@ def generate_quadratic() -> Quadratic:
     # root =
     pass
 
-@problem_type(
+@gen(
     description="Given a quadratic function in standard form, find vertex-intercept form"
 )
 def quadratic_function_find_vertex_intercept_form():
