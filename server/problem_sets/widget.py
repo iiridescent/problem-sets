@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
-from typing import List
+
+from problem_sets.serialization import Serializable
 
 
-class WidgetOptions(ABC):
+class WidgetOptions(Serializable, ABC):
     """
     Abstract widget options, to be extended by the options for each specific widget
     """
@@ -16,7 +17,7 @@ class WidgetOptions(ABC):
         return {"type": self.w_type}
 
 
-class Widget:
+class Widget(Serializable):
     def __init__(self, options: WidgetOptions):
         self.options = options
 

@@ -1,10 +1,8 @@
 from dataclasses import dataclass
-from typing import List, Union
-from problem_sets.gen.widget import Widget, TextWidgetOptions
-
 from typing import List, Union, Optional
-from problem_sets.gen.widget import Widget, TextWidgetOptions
+
 from problem_sets.problem import Problem
+from problem_sets.widget import Widget, TextWidgetOptions
 
 GEN_FORMAT = "generated"
 

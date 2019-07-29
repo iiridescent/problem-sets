@@ -1,10 +1,10 @@
-from .environment import *
+from problem_sets.widget import *
 from .api import *
+from .environment import *
 # from .math import *
 # from .format import *
 # from .manager import *
 from .gen import *
-from .problem import *
 from .gen.testbed import *
 from .gen.util import *
-from .gen.widget import *
+from .problem import *

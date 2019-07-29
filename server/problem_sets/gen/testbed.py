@@ -1,8 +1,10 @@
-from problem_sets.problem import Problem
-from problem_sets.gen.widget import TextWidgetOptions
-from IPython.display import display, Markdown, Latex
-from IPython import get_ipython
 from types import FunctionType
+
+from IPython import get_ipython
+from IPython.display import display, Markdown, Latex
+
+from problem_sets.problem import Problem
+from problem_sets.widget import TextWidgetOptions
 
 
 class DebugProblemWrapper:

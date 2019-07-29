@@ -1,8 +1,11 @@
+from abc import ABC
+
 from typing import Union
-from abc import ABC, abstractmethod
+
+from problem_sets.serialization import Serializable
 
 
-class Problem(ABC):
+class Problem(Serializable, ABC):
     def __init__(
             self,
             set_id: str,
