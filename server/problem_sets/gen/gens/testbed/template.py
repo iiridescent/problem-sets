@@ -1,34 +1,18 @@
+#  Copyright (c) 2019 Thomas Howe
+
 #%%
 
 # Import all of this
 
-from IPython.lib.deepreload import reload
-
 #%load_ext autoreload
 
-from IPython.display import Latex, Markdown
-
 from problem_sets import (
-    fexpprod,
-    froot,
-    ffrac,
-    fper,
-    fmath,
-    fcur,
-    render_latex,
-    render_testbed_problem,
-    DebugProblemWrapper,
     create_full_text_problem,
     debug,
-    gen,
+    gen_def,
     Environment,
 )
-from sympy import Expr, symbols, latex
-from numpy import arccos, arcsin, arctan, around
-from numpy.random import randint, choice, seed
-from numbers import Number
-from enum import Enum
-from fractions import Fraction
+
 
 #%%
 # %autoreload 2
@@ -36,7 +20,7 @@ from fractions import Fraction
 
 @debug
 # Problem type decorator (don't uncomment this until it's ready to be tested on the server, because the server will import it):
-@gen(
+@gen_def(
     description="Example problem type",
     source="Example source",
     target_env=Environment.debug,

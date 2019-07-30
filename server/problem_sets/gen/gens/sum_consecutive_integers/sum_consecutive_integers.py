@@ -1,10 +1,11 @@
-import math
+#  Copyright (c) 2019 Thomas Howe
+
 from random import Random
-from typing import List
 
-from problem_sets import Problem, create_full_text_problem, gen, fmath, ford, Widget
+from problem_sets import Problem, create_full_text_problem, gen_def, fmath, ford
 
-@gen(
+
+@gen_def(
     description="$a$ is the sum of $n$ consecutive integers, find the $m$th",
     source="Created by Thomas Howe"
 )

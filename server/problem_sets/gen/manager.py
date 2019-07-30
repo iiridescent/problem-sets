@@ -1,9 +1,11 @@
+#  Copyright (c) 2019 Thomas Howe
+
 import importlib
 import os
+from dataclasses import dataclass
 from numbers import Number
 from types import FunctionType
 
-from dataclasses import dataclass
 from numpy import int64
 from numpy.random import seed as np_seed, randint
 
@@ -43,7 +45,7 @@ class Gen:
         }
 
 
-def gen(name=None, description=None, source=None, target_env=Environment.prod):
+def gen_def(name=None, description=None, source=None, target_env=Environment.prod):
     """
     Annotation for registering problem generator
     """

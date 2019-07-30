@@ -1,8 +1,10 @@
+#  Copyright (c) 2019 Thomas Howe
+
 import math
 from random import Random
 from typing import List
 
-from problem_sets import Problem, fmath, Widget, build_text_widget_options, gen
+from problem_sets import Problem, fmath, Widget, build_text_widget_options, gen_def
 
 # Arbitrary number to keep while loops from hanging in rare cases
 MAX_RANDOM_TRIES = 50
@@ -191,7 +193,8 @@ def relation_analysis(question_types: List[str], is_function: bool = None, lengt
     data = Problem(problem, solution_content)
     return data
 
-@gen(
+
+@gen_def(
     description="Find if a given relation is a function",
     source="Created by Thomas Howe"
 )
@@ -201,21 +204,24 @@ def is_relation_function():
     """
     return relation_analysis([QUESTION_IS_FUNCTION])
 
-@gen(
+
+@gen_def(
     description="Find the domain and range of a given relation",
     source="Created by Thomas Howe"
 )
 def relation_domain_and_range():
     return relation_analysis([QUESTION_DOMAIN_AND_RANGE])
 
-@gen(
+
+@gen_def(
     description="Find the domain of a given relation",
     source="Created by Thomas Howe"
 )
 def relation_domain():
     return relation_analysis([QUESTION_DOMAIN])
 
-@gen(
+
+@gen_def(
     description="Find the range of a given relation",
     source="Created by Thomas Howe"
 )

@@ -1,10 +1,12 @@
+#  Copyright (c) 2019 Thomas Howe
+
 # %load_ext autoreload
 # %autoreload 2
 
 from fractions import Fraction
 
 from numpy import arccos, arcsin, arctan, around
-from numpy.random import choice, seed
+from numpy.random import choice
 
 from problem_sets.gen import (
     fmath,
@@ -15,7 +17,7 @@ from problem_sets.gen import (
     LatexTrigFunction,
     randint_gap_tuple,
     sign,
-    gen,
+    gen_def,
     pick_from_list,
     debug,
     Environment,
@@ -23,8 +25,9 @@ from problem_sets.gen import (
 )
 
 
+# %%
 @debug(1846185783)
-@gen(source="Sullivan Trigonometry 3.2, 35-56", target_env=Environment.debug)
+@gen_def(source="Sullivan Trigonometry 3.2, 35-56", target_env=Environment.debug)
 def find_trig_func_arc_inverse_with_calculator():
     problem_instruction = "Use a calculator to find the value of this expression rounded to two decimal places:"
 

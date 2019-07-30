@@ -1,3 +1,5 @@
+#  Copyright (c) 2019 Thomas Howe
+
 from abc import ABC, abstractmethod
 
 from problem_sets.serialization import Serializable
@@ -45,7 +47,7 @@ def build_text_widget_options(text: str) -> TextWidgetOptions:
     return TextWidgetOptions(text)
 
 
-def build_graph_widget_demo(options: {"text": str}):
+def build_graph_widget_demo(options: dict):
     return {
         "type": "graph",
         "options": {
@@ -72,4 +74,3 @@ def build_table_widget_demo():
             "labels": ["A", "B", "C", "D", "E", "F"],
         },
     }
-

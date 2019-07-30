@@ -1,13 +1,17 @@
-from sympy import symbols, Poly, Rational, latex
+#  Copyright (c) 2019 Thomas Howe
+
 from numpy import random, around, arange
 from numpy.random import randint
-from problem_sets import create_full_text_problem, gen, render_testbed_problem, fmath
+from sympy import symbols, Rational, latex
+
+from problem_sets import create_full_text_problem, gen_def, fmath
 
 """
 5.5: The Real Zeros of a Polynomial Function
 """
 
-@gen(
+
+@gen_def(
     description="Given a polynomial function $f(x)$, find $f(-x)",
     source="Sullivan Algebra 5.5"
 )

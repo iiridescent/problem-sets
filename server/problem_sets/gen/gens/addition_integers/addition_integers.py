@@ -1,8 +1,11 @@
+#  Copyright (c) 2019 Thomas Howe
+
 import random
 
-from problem_sets import Problem, fmath, gen, Widget, build_text_widget_options
+from problem_sets import Problem, fmath, gen_def, Widget, build_text_widget_options
 
-@gen(description="Add two integers", source="Created by Thomas Howe")
+
+@gen_def(description="Add two integers", source="Created by Thomas Howe")
 def addition_integers(length=2, low=1, high=10) -> Problem:
     length = int(length)
     low = int(low)

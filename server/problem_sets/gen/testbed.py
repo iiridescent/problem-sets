@@ -1,3 +1,5 @@
+#  Copyright (c) 2019 Thomas Howe
+
 from types import FunctionType
 
 from IPython import get_ipython
@@ -17,7 +19,7 @@ def render_testbed_problem(problem_fn, random_seed=None):
 
     problem = problem_fn(random_seed)
     debug_info = problem.debug_info
-    random_seed = problem.random_seed
+    random_seed = problem.id
 
     body = ""
 

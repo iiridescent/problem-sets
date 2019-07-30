@@ -1,5 +1,7 @@
-from problem_sets.gen.manager import registered_gens, load_gens
+#  Copyright (c) 2019 Thomas Howe
+
 from problem_sets.environment import Environment
+from problem_sets.gen.manager import registered_gens, load_gens
 
 
 def problem(set_id: str):

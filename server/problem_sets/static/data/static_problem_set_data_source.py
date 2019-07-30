@@ -1,15 +1,17 @@
+#  Copyright (c) 2019 Thomas Howe
+
 from abc import ABC, abstractmethod
 
-from problem_sets.static.static_problem_set import StaticProblemSet
+from problem_sets.static.static_problem_set_entity import StaticProblemSetEntity
 
 
 class StaticProblemSetDataSource(ABC):
     @abstractmethod
-    def create(self, data: StaticProblemSet):
+    def create(self, data: StaticProblemSetEntity):
         pass
 
     @abstractmethod
-    def get(self, id: str) -> StaticProblemSet:
+    def get(self, id: str) -> StaticProblemSetEntity:
         pass
 
     @abstractmethod
@@ -17,7 +19,7 @@ class StaticProblemSetDataSource(ABC):
         pass
 
     @abstractmethod
-    def update(self, id: str, data: StaticProblemSet):
+    def update(self, id: str, data: StaticProblemSetEntity):
         pass
 
     @abstractmethod
