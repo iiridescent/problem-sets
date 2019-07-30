@@ -1,6 +1,6 @@
 #  Copyright (c) 2019 Thomas Howe
 
-from problem_sets import Serializable
+from problem_sets.serialization import Serializable
 
 
 class StaticAnswerPageEntity(Serializable):

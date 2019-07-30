@@ -6,6 +6,7 @@ from problem_sets.static.data.sqlite import sqlite_manager, sqlite_util
 from problem_sets.static.data.sqlite.static_problem_set_sqlite_repository import PROBLEM_SETS_TABLE_ID
 from problem_sets.static.data.sqlite.static_problem_sqlite_repository import PROBLEMS_TABLE_ID
 from problem_sets.static.data.sqlite.test import sqlite_test_util
+from problem_sets.static.data.sqlite.test.sqlite_test_util import conn
 from problem_sets.static.static_problem_entity import StaticProblemEntity
 from problem_sets.static.static_problem_set_entity import StaticProblemSetEntity
 
@@ -36,7 +37,7 @@ def test_add_problem(problem_set_entity, problem_entity):
     command_problem_list = f"""SELECT * FROM problems WHERE set_id=? 
     """
 
-    result = sqlite_util.query_fetch(sqlite_manager.conn, command_problem_list, (EXAMPLE_SET_ID,))
+    result = sqlite_util.query_fetch(conn, command_problem_list, (EXAMPLE_SET_ID,))
 
     assert len(result) == 1
 

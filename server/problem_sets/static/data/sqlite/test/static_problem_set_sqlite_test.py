@@ -24,12 +24,14 @@ def test_add_problem_set(problem_set_entity):
 
     add_problem_set_to_db(problem_set_entity)
 
-    sql_fetch = """SELECT * FROM problem_sets
+    sql_fetch = """SELECT * FROM problem_set
     """
 
-    result = sqlite_util.query_fetch(sqlite_manager.conn, sql_fetch)
+    from problem_sets.static.data.sqlite.test.sqlite_test_util import conn
 
-    assert len(result) == 1
+    result = sqlite_util.query_fetch(conn, sql_fetch)
+
+    assert result is not None and len(result) == 1
 
 
 def test_get_problem_set(problem_set_entity):

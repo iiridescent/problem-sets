@@ -2,12 +2,13 @@
 
 import os
 import sqlite3
+
 from typing import Optional
 
 
 def sqlite_touch(file: str) -> None:
     """ create a database connection to an SQLite database """
-    conn = connection(file)
+    conn = conn(file)
     if conn:
         print(f"Loaded database at {file.split(os.sep)[-1]}, {sqlite3.version}")
     else:
@@ -23,7 +24,7 @@ def connection(file: str) -> Optional[sqlite3.Connection]:
         conn = sqlite3.connect(file)
         return conn
     except sqlite3.Error as e:
-        print(e)
+        print(f"SQLITE ERROR: {e}")
 
     return None
 
@@ -41,9 +42,7 @@ def query_fetch(conn: sqlite3.Connection, sql: str, *params):
     try:
         cursor = conn.cursor()
         cursor.execute(sql, *params)
-        rows = cursor.fetchall()
-
-        return [dict(row) for row in rows]
+        return cursor.fetchall()
 
     except sqlite3.Error as e:
         print(e)
