@@ -1,3 +1,4 @@
+sqlalchemy
 pytest
 ipython==7.6.0
 dataclasses==0.6

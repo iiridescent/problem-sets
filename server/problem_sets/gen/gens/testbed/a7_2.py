@@ -1,14 +1,12 @@
+#  Copyright (c) 2019 Thomas Howe
+
 #%%
-from IPython.lib.deepreload import reload
 #%load_ext autoreload
 
-from IPython.display import Latex, Markdown
-
-from util import fmath
-from sympy import Expr, symbols, latex
 from numbers import Number
-from testbed_utils import render_latex
-from enum import Enum
+
+from IPython.display import Latex
+
 
 #%%
 # %autoreload 2
@@ -95,7 +93,6 @@ from util import fmath
 from random import getrandbits
 from numpy.random import randint, choice
 from util import Axis
-from enum import Enum
 from environment import Environment
 
 def geom_parabola_given_f_v_find_eq_and_lr(env: Environment=Environment.prod):
@@ -118,7 +115,7 @@ def geom_parabola_given_f_v_find_eq_and_lr(env: Environment=Environment.prod):
 
     expr = f_expr_str_parabola(a, shift[0], shift[1], axis)
 
-    lr_abs = 4*
+    # lr_abs = 4*
 
     solution_text = fmath(expr, env)
 

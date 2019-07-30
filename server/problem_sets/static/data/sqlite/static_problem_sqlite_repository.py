@@ -12,17 +12,17 @@ PROBLEMS_TABLE_ID = "problems"
 
 class StaticProblemSQLiteRepository(SQLiteRepository, StaticProblemDataSource):
 
-    def __init__(self, connection: sqlite3.Connection):
-        super().__init__(connection, PROBLEMS_TABLE_ID)
+    def __init__(self, session: sqlite3.Connection):
+        super().__init__(session, PROBLEMS_TABLE_ID)
 
     def create(self, data: StaticProblemEntity):
         create_problem_command = """INSERT INTO problems (set_id, used) VALUES (?, ?)"""
-        sqlite_util.write_commit(self.connection, create_problem_command, (data.set_id, data.used))
+        sqlite_util.write_commit(self.session, create_problem_command, (data.set_id, data.used))
 
     def get(self, id: int) -> StaticProblemEntity:
         get_problem_command = """SELECT * FROM problems WHERE id=?
         """
-        result = sqlite_util.query_fetch(self.connection, get_problem_command, (id,))
+        result = sqlite_util.query_fetch(self.session, get_problem_command, (id,))
 
         if len(result) == 0:
             return None
@@ -51,4 +51,4 @@ class StaticProblemSQLiteRepository(SQLiteRepository, StaticProblemDataSource):
                                         FOREIGN KEY (set_id) REFERENCES problem_sets(id)
                                         ON UPDATE CASCADE ON DELETE CASCADE
                                     );"""
-        sqlite_util.write_commit(self.connection, create_table_command)
+        sqlite_util.write_commit(self.session, create_table_command)

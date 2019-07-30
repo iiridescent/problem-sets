@@ -1,23 +1,17 @@
+#  Copyright (c) 2019 Thomas Howe
+
 #%%
-from IPython.lib.deepreload import reload
 
 #%load_ext autoreload
 
-from IPython.display import Latex, Markdown
-
-from util import fmath, ffrac, 
-from sympy import Expr, symbols, latex
-from numpy import arccos, arcsin, arctan, around
-from numpy.random import randint, choice
-from numbers import Number
-from testbed_utils import render_latex, render_testbed_problem, DebugProblemWrapper
-from enum import Enum
-from environment import Environment
-from problem import create_full_text_problem
 from fractions import Fraction
 
-#%%
+from numpy import arccos, arcsin, arctan, around
+from numpy.random import randint, choice
+
+# %%
 # %autoreload 2
+from problem_sets import build_gen_problem_content, fmath, ffrac
 
 
 def find_trig_func_arc_inverse_with_calculator():
@@ -63,7 +57,7 @@ def find_trig_func_arc_inverse_with_calculator():
 
             return (
                 numerator / denominator,
-                ffrac
+                ffrac(numerator, denominator)
             )
         elif picked_number_type == "sqrt":
             square = randint(sqrt_range[0], sqrt_range[1])
@@ -81,7 +75,7 @@ def find_trig_func_arc_inverse_with_calculator():
     problem_text = fmath(f"\{picked_function[0]}^{{-1}}({picked_number[1]})")
     solution_text = fmath(str(answer))
 
-    problem = create_full_text_problem(
+    problem = build_gen_problem_content(
         [problem_instruction, problem_text], [solution_text]
     )
 
@@ -94,7 +88,3 @@ def find_trig_func_arc_inverse_with_calculator():
     #     return DebugProblemWrapper(debug_info, problem)
 
     return problem
-
-
-render_testbed_problem(find_trig_func_arc_inverse_with_calculator)
-# Latex('\\sqrt[^3]{5}')
