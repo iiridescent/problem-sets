@@ -1,42 +1,46 @@
-import { GeneratedProblem } from './store';
-import Vue from 'vue';
-import Vuex, { Store } from 'vuex';
+import { GeneratedProblem } from "./store";
+import Vue from "vue";
+import Vuex, { Store } from "vuex";
 
 Vue.use(Vuex);
 
 export const store: Store<AppState> = new Vuex.Store({
-  state: {
-      currentSession: undefined
-  },
-  mutations: {
-
-  },
-  actions: {
-
-  },
-});
+                                                         state: {
+                                                             currentSession: undefined
+                                                         },
+                                                         mutations: {},
+                                                         actions: {},
+                                                     });
 
 export interface AppState {
-  currentSession: CurrentSession | undefined;
+    currentSession: CurrentSession | undefined;
 }
 
 export interface CurrentSession {
-  problems: GeneratedProblem[];
+    problems: GeneratedProblem[];
 }
 
 // TODO: Move types to their own files
 export interface GeneratedProblem {
-  content: Widget[];
-  solution: Widget[];
+    content: Widget[];
+    solution: Widget[];
 }
 
 export interface Widget {
-  options: WidgetOptions;
+    options: WidgetOptions;
 }
 
 // tslint:disable-next-line:no-empty-interface
-export interface WidgetOptions {}
+export interface WidgetOptions {
+}
 
 export interface TextWidgetOptions extends WidgetOptions {
-  text: string;
+    text: string;
 }
+
+export interface ImageInfo {
+    blob: File;
+    url: string;
+}
+
+export type TextOrImage = string | ImageInfo;
