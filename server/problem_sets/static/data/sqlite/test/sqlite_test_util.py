@@ -2,17 +2,25 @@
 
 import os
 from sqlite3 import Connection
-
 from typing import List, Union
 
 from problem_sets.dir_util import ROOT_DIR
 from problem_sets.static.data import data_util
 from problem_sets.static.data.sqlite import sqlite_manager, sqlite_util
 from problem_sets.static.data.sqlite.sqlite_util import connection
+from problem_sets.static.data.sqlite.static_content_sqlite_repository import StaticContentRow, \
+    static_content_problem_association, static_content_answer_problem_set_association, \
+    static_content_instruction_problem_set_association
+from problem_sets.static.data.sqlite.static_problem_set_sqlite_repository import StaticProblemSetRow
+from problem_sets.static.data.sqlite.static_problem_sqlite_repository import StaticProblemRow
 
 TEST_DB_PATH = data_util.DATA_DIR = os.path.join(ROOT_DIR, "test_static_data", "test_static.db")
 
 conn: Connection = None
+
+drop_tables_list = [StaticProblemRow.__tablename__, StaticProblemSetRow.__tablename__, StaticContentRow.__tablename__,
+                    static_content_problem_association.name, static_content_answer_problem_set_association.name,
+                    static_content_instruction_problem_set_association.name]
 
 
 def clean_start(tables: Union[str, List[str]]):

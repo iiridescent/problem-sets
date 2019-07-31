@@ -1,10 +1,11 @@
+from problem_sets.static.data.sqlite.static_problem_set_sqlite_repository import StaticProblemSetSQLiteRepository
 from problem_sets.static.data.static_problem_set_data_source import StaticProblemSetDataSource
-from problem_sets.static.static_problem_set_entity import StaticProblemSetEntity
+from problem_sets.static.data.static_problem_set_entity import StaticProblemSetEntity
 
 
 class StaticProblemSetRepository(StaticProblemSetDataSource):
 
-    def __init__(self, sqlite_repo):
+    def __init__(self, sqlite_repo: StaticProblemSetSQLiteRepository):
         self.sqlite_repo = sqlite_repo
 
     def create(self, data: StaticProblemSetEntity):

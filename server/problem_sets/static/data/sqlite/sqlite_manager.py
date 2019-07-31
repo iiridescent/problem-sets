@@ -11,11 +11,13 @@ Base = declarative_base()
 
 # Base must be created before these are imported
 from problem_sets.static.data.data_manager import DATA_DIR
+from problem_sets.static.data.sqlite.static_content_sqlite_repository import StaticContentSQLiteRepository
 from problem_sets.static.data.sqlite.static_problem_sqlite_repository import StaticProblemSQLiteRepository
 from problem_sets.static.data.sqlite.static_problem_set_sqlite_repository import StaticProblemSetSQLiteRepository
 
 DB_PATH = os.path.join(DATA_DIR, "static.db")
 
+static_content_repo: StaticContentSQLiteRepository = None
 static_problem_set_repo: StaticProblemSetSQLiteRepository = None
 static_problem_repo: StaticProblemSQLiteRepository = None
 # static_answer_page_repo: StaticAnswerPageSQLiteRepository = None
@@ -35,7 +37,6 @@ def initialize(db_path: str = None):
     if not os.path.exists(db_parent_dir):
         os.makedirs(db_parent_dir)
 
-
     # TODO see if I can get rid of this call because SQLAlchemy handles it
     # sqlite_util.sqlite_touch(db_path)
     db = sql.create_engine(f"sqlite:///{db_path}")
@@ -46,10 +47,11 @@ def initialize(db_path: str = None):
 
 
 def init_repos(engine: sql.engine.Engine):
-    global static_problem_set_repo, static_problem_repo, static_answer_page_repo
+    global static_content_repo, static_problem_set_repo, static_problem_repo, static_answer_page_repo
     Base.metadata.bind = engine
     Base.metadata.create_all(engine)
     session = Session()
+    static_content_repo = StaticContentSQLiteRepository(session)
     static_problem_repo = StaticProblemSQLiteRepository(session)
     static_problem_set_repo = StaticProblemSetSQLiteRepository(session)
     # static_answer_page_repo = StaticAnswerPageSQLiteRepository(conn)

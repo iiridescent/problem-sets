@@ -62,6 +62,10 @@ class GenProblem(Problem):
 
         return data
 
+    @classmethod
+    def deserialize(cls, serialized: dict):
+        pass
+
     @staticmethod
     def from_content(gen_problem_content: GenProblemContent, set_id: str, id: int):
         return GenProblem(set_id, id, gen_problem_content.content, gen_problem_content.solution,

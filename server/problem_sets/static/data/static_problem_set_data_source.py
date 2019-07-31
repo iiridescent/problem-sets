@@ -1,8 +1,9 @@
 #  Copyright (c) 2019 Thomas Howe
 
 from abc import ABC, abstractmethod
+from typing import Optional, List
 
-from problem_sets.static.static_problem_set_entity import StaticProblemSetEntity
+from problem_sets.static.data.static_problem_set_entity import StaticProblemSetEntity
 
 
 class StaticProblemSetDataSource(ABC):
@@ -11,7 +12,7 @@ class StaticProblemSetDataSource(ABC):
         pass
 
     @abstractmethod
-    def get(self, id: str) -> StaticProblemSetEntity:
+    def get(self, id: str) -> Optional[StaticProblemSetEntity]:
         pass
 
     @abstractmethod
@@ -23,7 +24,7 @@ class StaticProblemSetDataSource(ABC):
         pass
 
     @abstractmethod
-    def list(self):
+    def list(self) -> Optional[List[StaticProblemSetEntity]]:
         pass
 
     @abstractmethod

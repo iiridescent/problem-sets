@@ -6,15 +6,14 @@ import math
 from random import Random
 from typing import List
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
 import problem_sets as sets
 from problem_sets import Environment, problem
 from json import dumps
 
-
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 CORS(app)
 
 
@@ -38,7 +37,7 @@ def format_arg(arg):
 
 
 @app.route("/api/problem/<set_id>")
-def hello(set_id):
+def problem(set_id):
     # args = request.args.to_dict()
     # args_formatted = {}
     # for arg_key in args:
@@ -56,10 +55,15 @@ def hello(set_id):
     return jsonify(response_serialized)
 
 
+@app.route("/images/<path:path>")
+def images(path):
+    return send_from_directory('static_data/images/', path)
+
+
 def main():
+    print('initializing server')
     sets.initialize(Environment.debug)
     app.run(host="0.0.0.0", port=5000, debug=True)
 
 
-if __name__ == "__main__":
-    main()
+main()

@@ -1,18 +1,21 @@
 #  Copyright (c) 2019 Thomas Howe
 
 from dataclasses import dataclass
+from typing import Optional
 
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
-from sqlalchemy.orm import Session
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, func
+from sqlalchemy.orm import Session, relationship
+
+from problem_sets.static.data.sqlite.static_content_sqlite_repository import static_content_problem_association, \
+    StaticContentSQLiteRepository
 
 PROBLEMS_TABLE_ID = "problem"
 
-from problem_sets.static.data.sqlite import sqlite_util
 from problem_sets.static.data.sqlite.sqlite_manager import Base
 from problem_sets.static.data.sqlite.sqlite_repository import SQLiteRepository
 from problem_sets.static.data.sqlite.static_problem_set_sqlite_repository import PROBLEM_SETS_TABLE_ID
 from problem_sets.static.data.static_problem_data_source import StaticProblemDataSource
-from problem_sets.static.static_problem_entity import StaticProblemEntity
+from problem_sets.static.data.static_problem_entity import StaticProblemEntity
 
 
 @dataclass
@@ -21,8 +24,9 @@ class StaticProblemRow(Base):
     id = Column(Integer, primary_key=True)
     set_id = Column(String, ForeignKey(f"{PROBLEM_SETS_TABLE_ID}.id"))
     used = Column(Boolean)
+    content = relationship("StaticContentRow", secondary=static_content_problem_association)
 
-    def __init__(self, id: str, set_id: str, used: bool):
+    def __init__(self, id: int, set_id: str, used: bool):
         self.id = id
         self.set_id = set_id
         self.used = used
@@ -34,20 +38,21 @@ class StaticProblemSQLiteRepository(SQLiteRepository, StaticProblemDataSource):
         super().__init__(session, StaticProblemRow)
 
     def create(self, data: StaticProblemEntity):
-        create_problem_command = """INSERT INTO problems (set_id, used) VALUES (?, ?)"""
-        sqlite_util.write_commit(self.session, create_problem_command, (data.set_id, data.used))
+        row = self.map_entity_to_row(data)
 
-    def get(self, id: int) -> StaticProblemEntity:
-        get_problem_command = """SELECT * FROM problems WHERE id=?
-        """
-        result = sqlite_util.query_fetch(self.session, get_problem_command, (id,))
+        if data.content:
+            row.content.extend(list(
+                map(StaticContentSQLiteRepository.map_entity_to_row, data.content)))
 
-        if len(result) == 0:
+        self.db_insert(row)
+
+    def get(self, id: int) -> Optional[StaticProblemEntity]:
+        row: StaticProblemRow = self.db_find_by_id(id)
+
+        if row is None:
             return None
 
-        row = result[0]
-
-        return StaticProblemEntity(**row)
+        return self.map_row_to_entity(row)
 
     def delete(self, id: int):
         pass
@@ -55,27 +60,23 @@ class StaticProblemSQLiteRepository(SQLiteRepository, StaticProblemDataSource):
     def update(self, id: int, data: StaticProblemEntity):
         pass
 
-    def pick_problem_from_set(self, set_id: str):
-        pass
+    def pick_problem_from_set(self, set_id: str) -> Optional[StaticProblemEntity]:
+        row = self.session.query(StaticProblemRow).filter(StaticProblemRow.set_id == set_id).order_by(
+            func.random()).first()
+        return self.map_row_to_entity(row)
 
-    def list_problems_from_set(self, set_id: str):
-        pass
-
-    def setup(self):
-        # create_table_command = """CREATE TABLE IF NOT EXISTS problems (
-        #                                 id integer PRIMARY KEY,
-        #                                 set_id text NOT NULL,
-        #                                 used Boolean NOT NULL,
-        #                                 FOREIGN KEY (set_id) REFERENCES problem_sets(id)
-        #                                 ON UPDATE CASCADE ON DELETE CASCADE
-        #                             );"""
-        # sqlite_util.write_commit(self.session, create_table_command)
-        pass
+    def list_problems_from_set(self, set_id: str) -> Optional[StaticProblemEntity]:
+        rows = self.session.query(StaticProblemRow).filter(StaticProblemRow.set_id == set_id)
+        return self.db_map_list(rows)
 
     @staticmethod
-    def map_row_to_entity(row: Base):
-        pass
+    def map_row_to_entity(row: StaticProblemRow) -> StaticProblemEntity:
+        content_rows = row.content
+
+        content_entities = list(map(StaticContentSQLiteRepository.map_row_to_entity, content_rows))
+
+        return StaticProblemEntity(row.id, row.set_id, row.used, content_entities)
 
     @staticmethod
-    def map_entity_to_row(entity):
-        pass
+    def map_entity_to_row(entity: StaticProblemEntity) -> StaticProblemRow:
+        return StaticProblemRow(entity.id, entity.set_id, entity.used)

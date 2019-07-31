@@ -2,7 +2,8 @@
 
 import pytest
 
-from problem_sets.serialization import serialize_recursive, serialize_dict, serialize_list, Serializable
+from problem_sets.serialization import serialize_recursive, _list_serializable_dict, _list_serializable_lambda, \
+    Serializable
 
 
 class ExampleSerializable(Serializable):
@@ -12,10 +13,11 @@ class ExampleSerializable(Serializable):
         self.string = string
 
     def serialize(self) -> dict:
-        return {
-            "number": self.number,
-            "string": self.string,
-        }
+        return self.__dict__
+
+    @classmethod
+    def deserialize(cls, serialized: dict):
+        return cls(**serialized)
 
 
 @pytest.fixture()
@@ -52,8 +54,8 @@ def mock_data(example_serializable, example_serializable_list, example_serializa
 def mock_expected_data(example_serializable, example_serializable_list, example_serializable_dict):
     return {
         "unit": example_serializable.serialize(),
-        "list": serialize_list(example_serializable_list),
-        "dict": serialize_dict(example_serializable_dict),
+        "list": _list_serializable_lambda(example_serializable_list),
+        "dict": _list_serializable_dict(example_serializable_dict),
         "test": 5
     }
 

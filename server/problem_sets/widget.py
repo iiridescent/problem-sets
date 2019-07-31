@@ -18,6 +18,10 @@ class WidgetOptions(Serializable, ABC):
     def serialize(self):
         return {"type": self.w_type}
 
+    @classmethod
+    def deserialize(cls, serialized: dict):
+        pass
+
 
 class Widget(Serializable):
     def __init__(self, options: WidgetOptions):
@@ -25,6 +29,10 @@ class Widget(Serializable):
 
     def serialize(self) -> object:
         return {"options": self.options.serialize()}
+
+    @classmethod
+    def deserialize(cls, serialized: dict):
+        pass
 
 
 class TextWidgetOptions(WidgetOptions):
@@ -35,6 +43,10 @@ class TextWidgetOptions(WidgetOptions):
 
     def serialize(self):
         return {**(super().serialize()), "text": self.text}
+
+    @classmethod
+    def deserialize(cls, serialized: dict):
+        pass
 
 
 """
