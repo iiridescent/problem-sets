@@ -3,7 +3,9 @@
         <label>
             <input v-model="newSetId" placeholder="problem set id"/>
         </label>
-        <TextImagePasteCollector></TextImagePasteCollector>
+        <TextImagePasteCollector v-model="instructions" placeholder="paste set instructions"/>
+        <TextImagePasteCollector v-model="problems" placeholder="paste questions"/>
+        <TextImagePasteCollector v-model="answers" placeholder="paste answer pages"/>
     </div>
 </template>
 
@@ -11,6 +13,7 @@
     import Component from "vue-class-component";
     import {Prop, Vue} from "vue-property-decorator";
     import TextImagePasteCollector from "@/components/TextImagePasteCollector.vue";
+    import {BlobUrlPair} from "@/store";
 
 
     @Component({
@@ -21,11 +24,9 @@
     export default class StaticSetForm extends Vue {
         @Prop() public setId: string | undefined;
 
-        public newSetId: string = "";
+        public instructions: Array<BlobUrlPair> = [];
 
-        // protected async mounted() {
-        //
-        // }
+        public newSetId: string = "";
     }
 </script>
 

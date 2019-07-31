@@ -1,6 +1,6 @@
 <template>
     <div>
-        <input @paste="onPaste" placeholder="paste images here"></input>
+        <input @paste="onPaste" v-bind:placeholder=placeholder></input>
         <div class="pasted-images" v-if="images.length > 0">
             <div v-for="(image, i) in images" :key="i">
                 <img class="pasted-image" v-bind:src="image.url"/>
@@ -12,15 +12,13 @@
 
 <script lang="ts">
     import {Component, Prop, Vue} from "vue-property-decorator";
+    import {BlobUrlPair} from "@/store";
 
-    type BlobUrlPair = {
-        blob: File
-        url: string
-    }
 
     @Component({})
     export default class TextImagePasteCollector extends Vue {
-
+        @Prop() public placeholder: string = "paste images"        
+        
         public images: Array<BlobUrlPair> = [];
 
         onPaste(e: ClipboardEvent) {
@@ -43,6 +41,8 @@
                             blob: blob,
                             url: blobUrl
                         });
+
+                        this.$emit('input', this.images)
                     }
                 } else {
                     console.log("Not supported: " + type);
@@ -51,17 +51,18 @@
             }
         }
 
-        removeImage(i: int) {
+        removeImage(i: number) {
             if (i > -1) {
                 this.images.splice(i, 1);
             }
+            this.$emit('input', this.images)
         }
     }
 </script>
 
 <style scoped lang="scss">
     .pasted-image {
-        box-shadow: 0px 10px 10px #888888;
+        box-shadow: 0px 10px 10px #ab1230;
     }
 
     .close-button {
