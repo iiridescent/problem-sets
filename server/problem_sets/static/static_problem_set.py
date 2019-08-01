@@ -9,10 +9,13 @@ from problem_sets.static.static_problem import static_content_list_to_widget_lis
 class StaticProblemSet(StaticProblemSetEntity):
 
     def serialize(self) -> dict:
-        data = super(StaticProblemSet, self).serialize()
-        data['instruction_contents'] = serialize_recursive(
-            static_content_list_to_widget_list(static_content_list_to_widget_list(self.instruction_contents)))
-        data['answer_contents'] = serialize_recursive(static_content_list_to_widget_list(self.answer_contents))
+        data = self.__dict__.copy()
+        del data['instruction_contents']
+        del data['answer_contents']
+
+        data['instructionContents'] = serialize_recursive(
+            static_content_list_to_widget_list(self.instruction_contents))
+        data['answerContents'] = serialize_recursive(static_content_list_to_widget_list(self.answer_contents))
         return data
 
     @classmethod

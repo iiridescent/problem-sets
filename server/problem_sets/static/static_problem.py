@@ -3,7 +3,7 @@ from typing import List, Union
 from problem_sets.problem import Problem
 from problem_sets.serialization import serialize_recursive
 from problem_sets.static.data.static_content_entity import StaticContentEntity
-from problem_sets.static.static_content import StaticContent
+from problem_sets.static.static_content import StaticContent, StaticContentType
 from problem_sets.widget import Widget, ImageWidgetOptions, TextWidgetOptions
 
 STATIC_FORMAT = "static"
@@ -34,9 +34,9 @@ class StaticProblem(Problem):
 def static_content_to_widget(static_content: StaticContentEntity):
     if not isinstance(static_content, StaticContentEntity):
         return static_content
-    if static_content.type == "image":
+    if static_content.type == StaticContentType.image:
         return Widget(ImageWidgetOptions(str(static_content.id)))
-    elif static_content.type == "text":
+    elif static_content.type == StaticContentType.text:
         return Widget(TextWidgetOptions(static_content.value))
 
 

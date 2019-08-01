@@ -1,6 +1,7 @@
-import {GeneratedProblem} from "./store";
 import Vue from "vue";
-import Vuex, {Store} from "vuex";
+import Vuex, { Store } from "vuex";
+
+import { GeneratedProblem } from "./store";
 
 Vue.use(Vuex);
 
@@ -21,11 +22,11 @@ export interface CurrentSession {
 }
 
 export interface Problem {
-    format: "static" | "generated"
+    format: "static" | "generated";
     content: Widget[];
     // TODO using underscores because this is how it's done on the server. For now.
-    setId: string
-    id: number
+    setId: string;
+    id: number;
 }
 
 // TODO: Move types to their own files
@@ -34,6 +35,13 @@ export interface GeneratedProblem extends Problem {
 }
 
 export interface StaticProblem extends Problem {
+}
+
+export interface StaticProblemSet {
+    id: string;
+    source: string;
+    instructionContents: Widget[];
+    answerContents: Widget[];
 }
 
 export interface Widget {
@@ -63,7 +71,7 @@ export type TextOrImage = string | ImageInfo;
 export interface StaticProblemSetFormInfo {
     id: string;
     source: string;
-    instructions: Array<TextOrImage>;
-    problems: Array<TextOrImage>;
-    answers: Array<TextOrImage>;
+    instructions: TextOrImage[];
+    problems: TextOrImage[];
+    answers: TextOrImage[];
 }

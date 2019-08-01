@@ -6,6 +6,12 @@
             </div>
         </div>
         <div class="problems">
+            <div v-if="isStatic">
+                <div v-if="!staticSet">loading instructions...</div>
+                <div v-else>
+                    <WidgetList :widgets="staticSet.instructionContents"/>
+                </div>
+            </div>
             <WidgetList :widgets="problem.content"/>
             <div v-if="!isStatic">
                 <div class="answer" v-show="showingAnswer">
@@ -13,34 +19,35 @@
                     <WidgetList :widgets="problem.solution"/>
                 </div>
             </div>
-          <div v-else>
+            <div v-else>
 
-          </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from "vue-property-decorator";
+    import { StaticAPI } from "@/api/staticApi";
+    import WidgetList from "@/components/WidgetList.vue";
+    import ImageWidget from "@/components/widgets/ImageWidget.vue";
 
-    import {GeneratedProblem, StaticProblem, Widget, WidgetOptions} from "@/store";
+    import { GeneratedProblem, StaticProblem, Widget, WidgetOptions, StaticProblemSet } from "@/store";
+    import { Component, Prop, Vue } from "vue-property-decorator";
 
     import TextWidget from "./widgets/TextWidget.vue";
-    import ImageWidget from "@/components/widgets/ImageWidget.vue";
-    import {StaticAPI} from "@/api/staticApi";
-    import WidgetList from "@/components/WidgetList.vue";
 
     @Component({
-        components: {WidgetList}
-    })
+                   components: {WidgetList}
+               })
     export default class ProblemCard extends Vue {
         @Prop() public problem!: GeneratedProblem | StaticProblem;
         @Prop() public problemNumber!: number;
 
         public showingAnswer: boolean = false;
+        public staticSet: StaticProblemSet | null = null;
         public isStatic: Boolean = false;
-        public staticApi: StaticAPI | undefined;
-        public staticSet: any | undefined;
+        public staticApi: StaticAPI | null = null;
+
 
         widgetType(widget: Widget) {
             let options: WidgetOptions = widget.options;
@@ -55,19 +62,23 @@
             this.showingAnswer = !this.showingAnswer;
         }
 
-        mounted() {
-            this.setupStatic()
+        protected async beforeMount() {
+            this.setupStatic();
         }
 
-        setupStatic() {
+        async setupStatic() {
             if (this.problem.format != "static") {
                 return;
             }
 
             this.isStatic = true;
-            this.staticApi = new StaticAPI()
+            this.staticApi = new StaticAPI();
 
-            this.staticSet = this.staticApi.getStaticProblemSet(this.problem.setId)
+            let staticSetOrError: StaticProblemSet | string = await this.staticApi.getStaticProblemSet(this.problem.setId);
+
+            if (typeof (staticSetOrError) !== "string" && staticSetOrError.id) {
+                this.staticSet = staticSetOrError;
+            }
         }
     }
 </script>

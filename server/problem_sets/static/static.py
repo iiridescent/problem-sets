@@ -5,6 +5,7 @@ from problem_sets.static.data import data_manager
 from problem_sets.static.data.static_problem_data_source import StaticProblemDataSource
 from problem_sets.static.data.static_problem_entity import StaticProblemEntity
 from problem_sets.static.data.static_problem_set_data_source import StaticProblemSetDataSource
+from problem_sets.static.data.static_problem_set_entity import StaticProblemSetEntity
 from problem_sets.static.static_problem import StaticProblem
 from problem_sets.static.static_problem_set import StaticProblemSet
 
@@ -38,7 +39,10 @@ def get_static_problem_set(id: str) -> StaticProblemSet:
     if static_problem_set_data_source.check_id_available(id):
         raise Exception(f"No static problem set for id {id}")
 
-    return static_problem_set_data_source.get(id)
+    static_problem_set_entity: StaticProblemSetEntity = static_problem_set_data_source.get(id)
+
+    return StaticProblemSet(static_problem_set_entity.id, static_problem_set_entity.source,
+                            static_problem_set_entity.instruction_contents, static_problem_set_entity.answer_contents)
 
 
 def create_problem(problem: StaticProblemEntity):

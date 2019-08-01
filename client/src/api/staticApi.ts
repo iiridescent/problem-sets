@@ -1,4 +1,4 @@
-import {StaticProblemSetFormInfo, TextOrImage} from "@/store";
+import {StaticProblemSetFormInfo, TextOrImage, StaticProblemSet} from "@/store";
 
 export class StaticAPI {
 
@@ -20,7 +20,7 @@ export class StaticAPI {
     // }
 
 
-    public async getStaticProblemSet(id: string) {
+    public async getStaticProblemSet(id: string): Promise<StaticProblemSet | string> {
         let response = await fetch(`${StaticAPI.API_URL}/sets/${id}`, {method: "GET"});
 
         if (!response.ok) {

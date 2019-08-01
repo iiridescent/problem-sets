@@ -3,11 +3,11 @@ Main file to be split into smaller components once proof of concept proves the c
 """
 import os
 from json import dumps, loads
-from typing import List
 from uuid import uuid4
 
 from flask import Flask, jsonify, request, send_from_directory, Response
 from flask_cors import CORS
+from typing import List
 
 import problem_sets as sets
 from problem_sets import Environment, static, initialize, GenProblem
@@ -15,7 +15,7 @@ from problem_sets.static import StaticProblemEntity
 from problem_sets.static.static_content import StaticContent, StaticContentType
 from problem_sets.static.static_problem_set import StaticProblemSet
 
-app = Flask(__name__, static_url_path='')
+app = Flask(__name__, static_url_path='', )
 CORS(app)
 
 UPLOAD_FOLDER = os.path.realpath(os.path.join(__file__, os.path.pardir, 'static_data', 'temp'))
@@ -111,7 +111,7 @@ def static_sets():
 def static_set(set_id: str):
     if request.method == 'GET':
         static_set = static.get_static_problem_set(set_id)
-        return static_set.serialize()
+        return dumps(static_set.serialize())
 
 
 @app.route('/api/static/problems', methods=['GET', 'POST'])

@@ -1,10 +1,9 @@
 #  Copyright (c) 2019 Thomas Howe
 
 from dataclasses import dataclass
-from typing import Optional
-
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, func
 from sqlalchemy.orm import Session, relationship
+from typing import Optional
 
 from problem_sets.static.data.sqlite.static_content_sqlite_repository import static_content_problem_association, \
     StaticContentSQLiteRepository
@@ -65,6 +64,10 @@ class StaticProblemSQLiteRepository(SQLiteRepository, StaticProblemDataSource):
     def pick_problem_from_set(self, set_id: str) -> Optional[StaticProblemEntity]:
         row = self.session.query(StaticProblemRow).filter(StaticProblemRow.set_id == set_id).order_by(
             func.random()).first()
+
+        if row is None:
+            return None
+
         return self.map_row_to_entity(row)
 
     def list_problems_from_set(self, set_id: str) -> Optional[StaticProblemEntity]:
