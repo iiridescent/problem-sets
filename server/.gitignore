@@ -135,3 +135,6 @@ dmypy.json
 *.njsproj
 *.sln
 *.sw?
+
+# Temp
+./static_data/temp/*

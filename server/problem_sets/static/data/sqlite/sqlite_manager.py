@@ -39,7 +39,7 @@ def initialize(db_path: str = None):
 
     # TODO see if I can get rid of this call because SQLAlchemy handles it
     # sqlite_util.sqlite_touch(db_path)
-    db = sql.create_engine(f"sqlite:///{db_path}")
+    db = sql.create_engine(f"sqlite:///{db_path}?check_same_thread=False")
     db.echo = True
     db_meta = MetaData()
     Session.configure(bind=db)

@@ -5,7 +5,7 @@ import pytest
 from problem_sets.static.data.sqlite import sqlite_util, sqlite_manager
 from problem_sets.static.data.sqlite.test import sqlite_test_util
 from problem_sets.static.data.sqlite.test.sqlite_test_util import drop_tables_list
-from problem_sets.static.data.static_content_entity import StaticContentEntity, StaticContentType
+from problem_sets.static.data.static_content_entity import StaticContentEntity, StaticContentEntityType
 from problem_sets.static.data.static_problem_set_entity import StaticProblemSetEntity
 
 EXAMPLE_SET_ID = "test_id"
@@ -14,15 +14,15 @@ EXAMPLE_SET_ID = "test_id"
 @pytest.fixture
 def problem_set_entity():
     instruction_contents = [
-        StaticContentEntity(None, StaticContentType.text, "instruction1"),
-        StaticContentEntity(None, StaticContentType.text, "instruction2"),
-        StaticContentEntity(None, StaticContentType.text, "instruction3"),
+        StaticContentEntity(StaticContentEntityType.text, "instruction1"),
+        StaticContentEntity(StaticContentEntityType.text, "instruction2"),
+        StaticContentEntity(StaticContentEntityType.text, "instruction3"),
     ]
 
     answer_contents = [
-        StaticContentEntity(None, StaticContentType.text, "answer1"),
-        StaticContentEntity(None, StaticContentType.text, "answer2"),
-        StaticContentEntity(None, StaticContentType.text, "answer3"),
+        StaticContentEntity(StaticContentEntityType.text, "answer1"),
+        StaticContentEntity(StaticContentEntityType.text, "answer2"),
+        StaticContentEntity(StaticContentEntityType.text, "answer3"),
     ]
 
     return StaticProblemSetEntity(EXAMPLE_SET_ID, "example source", instruction_contents, answer_contents)

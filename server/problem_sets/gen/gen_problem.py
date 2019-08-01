@@ -32,8 +32,6 @@ class GenProblem(Problem):
                 "parameter solution in Problem must be of type List[Widget]"
             )
 
-        self.set_id = set_id
-        self.id = id
         self.content = content
         self.solution = solution
         self.debug_info = debug_info

@@ -1,6 +1,5 @@
 #  Copyright (c) 2019 Thomas Howe
 from dataclasses import dataclass
-
 from typing import List, Optional
 
 from problem_sets.serialization import Serializable, serialize_recursive
@@ -15,7 +14,10 @@ class StaticProblemSetEntity(Serializable):
     answer_contents: Optional[List[StaticContentEntity]]
 
     def serialize(self) -> dict:
-        return serialize_recursive(self)
+        data = self.__dict__
+        data['instruction_contents'] = serialize_recursive(self.instruction_contents)
+        data['answer_contents'] = serialize_recursive(self.answer_contents)
+        return data
 
     @classmethod
     def deserialize(cls, serialized: dict):

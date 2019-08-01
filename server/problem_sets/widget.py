@@ -49,6 +49,20 @@ class TextWidgetOptions(WidgetOptions):
         pass
 
 
+class ImageWidgetOptions(WidgetOptions):
+    def __init__(self, id: str):
+        super().__init__("image")
+
+        self.id = id
+
+    def serialize(self):
+        return {**(super().serialize()), "id": self.id}
+
+    @classmethod
+    def deserialize(cls, serialized: dict):
+        pass
+
+
 """
 DEPRECATED. For reference only.
 """

@@ -10,10 +10,10 @@ STATIC_FORMAT = "static"
 
 @dataclass
 class StaticProblemEntity(Serializable):
-    id: int
     set_id: str
     used: bool
     content: Optional[List[StaticContentEntity]]
+    id: Optional[int] = None
 
     def serialize(self) -> dict:
         data = self.__dict__

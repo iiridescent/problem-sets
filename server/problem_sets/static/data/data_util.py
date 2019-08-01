@@ -1,17 +1,17 @@
 #  Copyright (c) 2019 Thomas Howe
 import os
 
-from PIL import Image
-from typing import List
 
-
-def create_image(data: Image, path: str):
-    data.save(path)
-
-
-def delete_image(path: str):
+def delete_file(path: str):
     return os.remove(path)
 
 
-def get_image(path: str) -> Image:
-    return Image.open(path)
+def get_bytes_file(path: str) -> bytes:
+    with open(path, "rb") as file:
+        return bytes(file.read())
+
+
+def write_bytes_file(path: str, data: bytes):
+    file = open(path, "wb")
+    file.write(data)
+    file.close()

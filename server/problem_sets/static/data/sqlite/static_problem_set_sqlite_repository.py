@@ -51,6 +51,8 @@ class StaticProblemSetSQLiteRepository(SQLiteRepository, StaticProblemSetDataSou
 
         self.db_insert(row)
 
+        return row
+
     def get(self, id: str) -> Optional[StaticProblemSetEntity]:
         row: StaticProblemSetRow = self.db_find_by_id(id)
 

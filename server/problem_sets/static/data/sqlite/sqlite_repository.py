@@ -1,14 +1,17 @@
 #  Copyright (c) 2019 Thomas Howe
 
 from abc import ABC, abstractmethod
-
-from sqlalchemy.orm import Session
 from typing import Union, List
+
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
 
 from problem_sets.static.data.sqlite.sqlite_manager import Base
 
 
 class SQLiteRepository(ABC):
+    session = None
+    row_class = None
 
     def __init__(self, session: Session, row_class: Base):
         self.session = session
@@ -35,14 +38,22 @@ class SQLiteRepository(ABC):
             self.session.add(rows)
         elif isinstance(rows, list) and all(isinstance(n, Base) for n in rows):
             self.session.add_all(rows)
-        self.session.commit()
+        self.db_commit_or_rollback()
 
-    def db_map_list(self, rows: Union[Base, List[Base]]):
-        if isinstance(rows, self.row_class):
-            return self.map_row_to_entity(rows)
+    def db_commit_or_rollback(self):
+        try:
+            self.session.commit()
+        except SQLAlchemyError:
+            self.session.rollback()
+            raise
+
+    @classmethod
+    def db_map_list(cls, rows: Union[Base, List[Base]]):
+        if isinstance(rows, cls.row_class):
+            return cls.map_row_to_entity(rows)
         elif isinstance(rows, list):
             entities = []
             for row in rows:
-                if not isinstance(row, self.row_class):
+                if not isinstance(row, cls.row_class):
                     continue
-                entities.append(self.map_row_to_entity(row))
+                entities.append(cls.map_row_to_entity(row))

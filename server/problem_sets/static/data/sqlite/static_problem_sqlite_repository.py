@@ -37,7 +37,7 @@ class StaticProblemSQLiteRepository(SQLiteRepository, StaticProblemDataSource):
     def __init__(self, session: Session):
         super().__init__(session, StaticProblemRow)
 
-    def create(self, data: StaticProblemEntity):
+    def create(self, data: StaticProblemEntity) -> StaticProblemRow:
         row = self.map_entity_to_row(data)
 
         if data.content:
@@ -45,6 +45,8 @@ class StaticProblemSQLiteRepository(SQLiteRepository, StaticProblemDataSource):
                 map(StaticContentSQLiteRepository.map_entity_to_row, data.content)))
 
         self.db_insert(row)
+
+        return row
 
     def get(self, id: int) -> Optional[StaticProblemEntity]:
         row: StaticProblemRow = self.db_find_by_id(id)
@@ -75,7 +77,7 @@ class StaticProblemSQLiteRepository(SQLiteRepository, StaticProblemDataSource):
 
         content_entities = list(map(StaticContentSQLiteRepository.map_row_to_entity, content_rows))
 
-        return StaticProblemEntity(row.id, row.set_id, row.used, content_entities)
+        return StaticProblemEntity(row.set_id, row.used, content_entities, row.id)
 
     @staticmethod
     def map_entity_to_row(entity: StaticProblemEntity) -> StaticProblemRow:

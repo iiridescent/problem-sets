@@ -23,15 +23,16 @@ import ProblemCard from "./ProblemCard.vue";
 })
 export default class ProblemSet extends Vue {
   @Prop() public types!: string[];
+  @Prop() public count!: number;
 
   public problems: Problem[] = [];
 
   protected async mounted(): Promise<void> {
     const problemSetsApi: ProblemSetsAPI = new ProblemSetsAPI();
 
-    console.log(this.types);
+    let count = this.count != null ? this.count : 1;
 
-    this.problems = await problemSetsApi.loadProblemsOfTypes(this.types);
+    this.problems = await problemSetsApi.loadProblemsOfTypes(this.types, count);
   }
 }
 </script>

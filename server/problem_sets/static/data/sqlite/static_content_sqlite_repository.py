@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from problem_sets.static.data.sqlite.sqlite_manager import Base
 from problem_sets.static.data.sqlite.sqlite_repository import SQLiteRepository
-from problem_sets.static.data.static_content_entity import StaticContentEntity, StaticContentType
+from problem_sets.static.data.static_content_entity import StaticContentEntity, StaticContentEntityType
 
 static_content_instruction_problem_set_association = Table('static_content_instruction_problem_set_association',
                                                            Base.metadata,
@@ -41,11 +41,14 @@ class StaticContentSQLiteRepository(SQLiteRepository):
 
     @staticmethod
     def map_row_to_entity(row: StaticContentRow) -> StaticContentEntity:
-        return StaticContentEntity(row.id, StaticContentType(row.type), row.value)
+        return StaticContentEntity(StaticContentEntityType(row.type), row.value, row.id)
 
     @staticmethod
     def map_entity_to_row(entity: StaticContentEntity) -> StaticContentRow:
-        return StaticContentRow(entity.type.value, entity.value, entity.id)
+        value = entity.value
+        if isinstance(value, bytes):
+            value = None
+        return StaticContentRow(entity.type.value, value, entity.id)
 
     def __init__(self, session: Session):
         super().__init__(session, StaticContentRow)

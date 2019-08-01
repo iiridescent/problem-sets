@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from enum import Enum
 from inspect import isclass
 from types import FunctionType
 
@@ -44,6 +45,9 @@ def _recursive_serializable_lambda(val: any, func: FunctionType = _serialize_fun
 
     if isclass(val):
         return _list_serializable_dict(val.__dict__, func)
+
+    if isinstance(val, Enum):
+        return val.value
 
     return val
 

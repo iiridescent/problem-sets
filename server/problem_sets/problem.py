@@ -1,5 +1,4 @@
 from abc import ABC
-
 from typing import Union
 
 from problem_sets.serialization import Serializable
@@ -21,8 +20,13 @@ class Problem(Serializable, ABC):
         self.format = format
 
     def serialize(self) -> dict:
+        """JSON form for API"""
         return {
             "id": self.id,
-            "set_id": self.set_id,
+            "setId": self.set_id,
             "format": self.format,
         }
+
+    @classmethod
+    def deserialize(cls, serialized: dict):
+        pass

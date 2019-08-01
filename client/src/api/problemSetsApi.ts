@@ -8,7 +8,7 @@ export class ProblemSetsAPI {
 
     public async loadProblemsOfTypes(
         types: string | string[],
-        count: number = 10
+        count: number = 1
     ): Promise<GeneratedProblem[]> {
         const problems: GeneratedProblem[] = [];
         for (let i: number = 0; i < count; i++) {
