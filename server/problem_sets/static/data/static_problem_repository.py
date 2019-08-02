@@ -41,3 +41,6 @@ class StaticProblemRepository(StaticProblemDataSource):
 
     def list_problems_from_set(self, set_id: str):
         return self.sqlite_repo.list_problems_from_set(set_id)
+
+    def set_used(self, id: int, used: bool):
+        return self.sqlite_repo.set_used(id, used)

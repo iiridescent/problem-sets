@@ -1,9 +1,10 @@
 #  Copyright (c) 2019 Thomas Howe
 
 from dataclasses import dataclass
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, func
-from sqlalchemy.orm import Session, relationship
 from typing import Optional
+
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, func
+from sqlalchemy.orm import relationship, scoped_session
 
 from problem_sets.static.data.sqlite.static_content_sqlite_repository import static_content_problem_association, \
     StaticContentSQLiteRepository
@@ -21,9 +22,10 @@ from problem_sets.static.data.static_problem_entity import StaticProblemEntity
 class StaticProblemRow(Base):
     __tablename__ = PROBLEMS_TABLE_ID
     id = Column(Integer, primary_key=True)
-    set_id = Column(String, ForeignKey(f"{PROBLEM_SETS_TABLE_ID}.id"))
+    set_id = Column(String, ForeignKey(f"{PROBLEM_SETS_TABLE_ID}.id", ondelete="CASCADE"))
     used = Column(Boolean)
-    content = relationship("StaticContentRow", secondary=static_content_problem_association)
+    content = relationship("StaticContentRow", secondary=static_content_problem_association,
+                           cascade="save-update, merge, delete")
 
     def __init__(self, id: int, set_id: str, used: bool):
         self.id = id
@@ -32,9 +34,10 @@ class StaticProblemRow(Base):
 
 
 class StaticProblemSQLiteRepository(SQLiteRepository, StaticProblemDataSource):
+    row_class = StaticProblemRow
 
-    def __init__(self, session: Session):
-        super().__init__(session, StaticProblemRow)
+    def __init__(self, session: scoped_session):
+        super().__init__(session)
 
     def create(self, data: StaticProblemEntity) -> StaticProblemRow:
         row = self.map_entity_to_row(data)
@@ -62,7 +65,7 @@ class StaticProblemSQLiteRepository(SQLiteRepository, StaticProblemDataSource):
         pass
 
     def pick_problem_from_set(self, set_id: str) -> Optional[StaticProblemEntity]:
-        row = self.session.query(StaticProblemRow).filter(StaticProblemRow.set_id == set_id).order_by(
+        row = self.session.query(StaticProblemRow).filter_by(set_id=set_id, used=False).order_by(
             func.random()).first()
 
         if row is None:
@@ -71,8 +74,15 @@ class StaticProblemSQLiteRepository(SQLiteRepository, StaticProblemDataSource):
         return self.map_row_to_entity(row)
 
     def list_problems_from_set(self, set_id: str) -> Optional[StaticProblemEntity]:
-        rows = self.session.query(StaticProblemRow).filter(StaticProblemRow.set_id == set_id)
-        return self.db_map_list(rows)
+        rows = self.session.query(StaticProblemRow).filter_by(set_id=set_id)
+        return self.db_map_row_to_entities(rows)
+
+    def set_used(self, id: int, used: bool):
+        row: StaticProblemRow = self.session.query(StaticProblemRow).filter_by(id=id).first()
+
+        row.used = True
+
+        self.db_commit_or_rollback()
 
     @staticmethod
     def map_row_to_entity(row: StaticProblemRow) -> StaticProblemEntity:

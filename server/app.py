@@ -3,14 +3,16 @@ Main file to be split into smaller components once proof of concept proves the c
 """
 import os
 from json import dumps, loads
+from typing import List
 from uuid import uuid4
 
 from flask import Flask, jsonify, request, send_from_directory, Response
 from flask_cors import CORS
-from typing import List
 
 import problem_sets as sets
 from problem_sets import Environment, static, initialize, GenProblem
+from problem_sets.gen import gen
+from problem_sets.serialization import serialize_recursive
 from problem_sets.static import StaticProblemEntity
 from problem_sets.static.static_content import StaticContent, StaticContentType
 from problem_sets.static.static_problem_set import StaticProblemSet
@@ -42,22 +44,25 @@ def format_arg(arg):
     return arg.replace("<br>", "")
 
 
+@app.teardown_appcontext
+def cleanup(resp_or_exc):
+    static.cleanup()
+
+
 @app.route("/api/problem/<set_id>")
 def problem(set_id):
-    # args = request.args.to_dict()
-    # args_formatted = {}
-    # for arg_key in args:
-    #     arg_formatted = format_arg_key(arg_key)
-    #     arg_value_formatted = format_arg(args[arg_key])
-    #     args_formatted[arg_formatted] = arg_value_formatted
-
     response = sets.problem(set_id)
+
+    if response is None:
+        return f"no generator or static problems found for set id '{set_id}'", 404
+
     response_serialized = response.serialize()
 
-    if isinstance(response, GenProblem):
-        print(dumps(response.debug_info, indent=4, separators=(",", ": ")))
+    if sets.env == Environment.debug:
+        if isinstance(response, GenProblem):
+            print(dumps(response.debug_info, indent=4, separators=(",", ": ")))
 
-    print(response_serialized)
+        print(response_serialized)
 
     return jsonify(response_serialized)
 
@@ -105,13 +110,22 @@ def static_sets():
             return str(e), 405
 
         return Response(status=200)
+    elif request.method == 'GET':
+        static_problem_sets = static.static_sets()
+        return dumps(serialize_recursive(static_problem_sets))
 
 
-@app.route('/api/static/sets/<set_id>', methods=['GET', 'PUT'])
+@app.route('/api/static/sets/<set_id>', methods=['GET', 'PUT', 'DELETE'])
 def static_set(set_id: str):
     if request.method == 'GET':
-        static_set = static.get_static_problem_set(set_id)
+        static_set = static.static_problem_set(set_id)
         return dumps(static_set.serialize())
+    elif request.method == 'DELETE':
+        try:
+            static.delete_static_problem_set(set_id)
+        except Exception as e:
+            return str(e), 500
+        return Response(status=200)
 
 
 @app.route('/api/static/problems', methods=['GET', 'POST'])
@@ -128,12 +142,33 @@ def static_problems():
 
         static_problem = StaticProblemEntity(set_id, False, [static_content])
 
-        # try:
         static.create_problem(static_problem)
-        # except Exception as e:
-        #     return str(e), 405
 
         return Response(status=200)
+
+
+@app.route('/api/static/problems/<problem_id>', methods=['GET', 'PATCH'])
+def static_problem(problem_id):
+    if request.method == 'PATCH':
+        body = request.json
+
+        if 'used' in body:
+            static.mark_static_problem_used(problem_id, body['used'])
+            return "OK", 200
+
+        return "invalid parameters", 405
+
+
+@app.route('/api/gen/problems/<problem_id>')
+def gen_problem(problem_id):
+    response = gen.gen_problem(problem_id)
+
+    if response is None:
+        return f"no generator found for set id(:problem id) '{problem_id}'", 404
+
+    response_serialized = response.serialize()
+
+    return jsonify(response_serialized)
 
 
 def decode_static_content_form_data_list(static_form_data: list, files_form_data: list):
@@ -174,9 +209,9 @@ def static_content_from_image_upload(image):
 
 def main():
     print('initializing server')
-    initialize(Environment.debug)
+    initialize(Environment.prod)
     if __name__ == "__main__":
-        app.run(host="0.0.0.0", port=5000, debug=True)
+        app.run(host="0.0.0.0", port=5000, debug=False)
 
 
 main()

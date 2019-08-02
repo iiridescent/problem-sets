@@ -8,9 +8,18 @@ def gen_problem(set_id: str):
     """
     Attempt to generate problem with generator id 'set_id' (generators have an infinite virtual "set")
     """
+
+    problem_id = None
+
+    if ':' in set_id:
+        set_id_split = set_id.split(':')
+        problem_id = int(set_id_split[1])
+        set_id = set_id_split[0]
+
     if set_id not in registered_gens:
         return
-    return registered_gens[set_id].fun()
+
+    return registered_gens[set_id].fun(problem_id)
 
 
 def gen_sets():

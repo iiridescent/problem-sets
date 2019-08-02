@@ -1,6 +1,7 @@
 import os
 
 from problem_sets.dir_util import ROOT_DIR
+from problem_sets.environment import Environment
 
 DATA_DIR = os.path.join(ROOT_DIR, "static_data")
 
@@ -17,9 +18,9 @@ static_problem_repo: StaticProblemRepository = None
 # static_answer_page_repo: StaticAnswerPageRepository = None
 
 
-def initialize():
+def initialize(env: Environment):
     global static_problem_set_repo, static_problem_repo
-    sqlite_manager.initialize()
+    sqlite_manager.initialize(env)
 
     static_problem_set_repo = StaticProblemSetRepository(sqlite_manager.static_problem_set_repo)
     static_problem_repo = StaticProblemRepository(sqlite_manager.static_problem_repo)

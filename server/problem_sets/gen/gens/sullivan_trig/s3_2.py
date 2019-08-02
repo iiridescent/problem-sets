@@ -19,15 +19,14 @@ from problem_sets.gen import (
     sign,
     gen_def,
     pick_from_list,
-    debug,
     Environment,
     build_gen_problem_content
 )
 
 
 # %%
-@debug(1846185783)
-@gen_def(source="Sullivan Trigonometry 3.2, 35-56", target_env=Environment.debug)
+# @debug()
+@gen_def(source="Sullivan Trigonometry 3.2, 35-56", target_env=Environment.prod)
 def find_trig_func_arc_inverse_with_calculator():
     problem_instruction = "Use a calculator to find the value of this expression rounded to two decimal places:"
 

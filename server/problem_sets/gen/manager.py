@@ -61,7 +61,7 @@ def gen_def(name=None, description=None, source=None, target_env=Environment.pro
             # convert to int so it can be serialized
             random_seed = int(random_seed)
 
-            np_seed()
+            np_seed(random_seed)
 
             problem_content: GenProblemContent = fun()
             problem = GenProblem.from_content(problem_content, name, random_seed)

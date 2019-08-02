@@ -2,22 +2,7 @@ import {StaticProblemSetFormInfo, TextOrImage, StaticProblemSet} from "@/store";
 
 export class StaticAPI {
 
-    public static API_URL: string = "http://localhost:5000/api/static";
-
-    // public async createSet(formInfo: StaticProblemSetFormInfo) {
-    //     const formData = new FormData();
-    //
-    //     formData.append('file', fileInput.files[0]);
-    //
-    //     const options = {
-    //         method: 'POST',
-    //         body: formData,
-    //         // If you add this, upload won't work
-    //         // headers: {
-    //         //   'Content-Type': 'multipart/form-data',
-    //         // }
-    //     };
-    // }
+    public static API_URL: string = `http://${window.location.hostname}:5000/api/static`;
 
 
     public async getStaticProblemSet(id: string): Promise<StaticProblemSet | string> {
@@ -28,6 +13,23 @@ export class StaticAPI {
         }
 
         return await response.json()
+    }
+
+
+    public async getStaticProblemSets(): Promise<StaticProblemSet[] | string> {
+        let response = await fetch(`${StaticAPI.API_URL}/sets`, {method: "GET"});
+
+        if (!response.ok) {
+            return response.statusText
+        }
+
+        return await response.json()
+    }
+
+    public async deleteStaticProblemSet(id: string): Promise<boolean> {
+        let response = await fetch(`${StaticAPI.API_URL}/sets/${id}`, {method: "DELETE"});
+
+        return response.ok
     }
 
 
@@ -77,11 +79,24 @@ export class StaticAPI {
             body: formData,
         };
 
-        let response = await fetch(`${StaticAPI.API_URL}/problems`, options);
+        let response = await fetch(`${StaticAPI.API_URL}/problems/`, options);
 
         if (!response.ok) {
             console.log(response.statusText)
         }
+    }
+
+    public async setProblemUsed(id: number, used: boolean) {
+        console.log(used)
+        const options = {
+            method: 'PATCH',
+            body: JSON.stringify({"used": used}),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        };
+        let response = await fetch(`${StaticAPI.API_URL}/problems/${id}`, options);
+        return response.statusText
     }
 
     private static addAllTextOrImagesToFormData(key: string, contentList: Array<TextOrImage>, formData: FormData) {

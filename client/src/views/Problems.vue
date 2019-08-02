@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ProblemSet v-bind:types="$route.params.type.split(',')"/>
+    <ProblemSet :types="$route.params.type.split(',')" :count="$route.params.count"/>
   </div>
 </template>
 

@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from sqlalchemy import Column, String
-from sqlalchemy.orm import Session, relationship
+from sqlalchemy.orm import relationship, backref, scoped_session
 
 from problem_sets.static.data.sqlite.static_content_sqlite_repository import \
     static_content_instruction_problem_set_association, \
@@ -23,10 +23,13 @@ class StaticProblemSetRow(Base):
     __tablename__ = PROBLEM_SETS_TABLE_ID
     id: str = Column(String, primary_key=True)
     source: str = Column(String)
-    problems = relationship("StaticProblemRow", backref=PROBLEM_SETS_TABLE_ID)
+    problems = relationship("StaticProblemRow", backref=backref(PROBLEM_SETS_TABLE_ID),
+                            cascade="save-update, merge, delete")
     instruction_contents = relationship("StaticContentRow",
-                                        secondary=static_content_instruction_problem_set_association)
-    answer_contents = relationship("StaticContentRow", secondary=static_content_answer_problem_set_association)
+                                        secondary=static_content_instruction_problem_set_association,
+                                        cascade="save-update, merge, delete")
+    answer_contents = relationship("StaticContentRow", secondary=static_content_answer_problem_set_association,
+                                   cascade="save-update, merge, delete")
 
     def __init__(self, id: str, source: str):
         self.id = id
@@ -34,9 +37,10 @@ class StaticProblemSetRow(Base):
 
 
 class StaticProblemSetSQLiteRepository(SQLiteRepository, StaticProblemSetDataSource):
+    row_class = StaticProblemSetRow
 
-    def __init__(self, session: Session):
-        super().__init__(session, StaticProblemSetRow)
+    def __init__(self, session: scoped_session):
+        super().__init__(session)
 
     def create(self, data: StaticProblemSetEntity):
         row = self.map_entity_to_row(data)
@@ -62,13 +66,13 @@ class StaticProblemSetSQLiteRepository(SQLiteRepository, StaticProblemSetDataSou
         return self.map_row_to_entity(row)
 
     def delete(self, id: str):
-        pass
+        return self.db_delete(id)
 
     def update(self, id: str, data: StaticProblemSetEntity):
         pass
 
     def list(self):
-        self.db_list()
+        return self.db_map_row_to_entities(self.db_list())
 
     def check_id_available(self, id: str) -> bool:
         result = self.get(id)

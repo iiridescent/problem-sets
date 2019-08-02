@@ -1,11 +1,11 @@
 <template>
     <div class="wrapper">
         <div class="info-controls">
-            <div class="number">{{ problemNumber }}.</div>
+            <div class="problemNumber">{{ problemNumber }}.</div>
             <div class="answer-visible-button" @click="toggleAnswerVisibility">{{ showingAnswer ? "hide" : "show" }}
             </div>
         </div>
-        <div class="problems">
+        <div class="content">
             <div v-if="isStatic">
                 <div v-if="!staticSet">loading instructions...</div>
                 <div v-else>
@@ -13,32 +13,33 @@
                 </div>
             </div>
             <WidgetList :widgets="problem.content"/>
-            <div v-if="!isStatic">
-                <div class="answer" v-show="showingAnswer">
-                    <hr class="divider">
-                    <WidgetList :widgets="problem.solution"/>
+            <div class="answer" v-show="showingAnswer">
+                <hr class="divider">
+                <div v-if="staticSet != null">{{staticSet.source}}</div>
+                <WidgetList :widgets="answerWidgets()"/>
+                <div class="problem-info">
+                    <p>{{problem.format}}</p>
+                    <p>set id: {{problem.setId}}</p>
+                    <p>id: {{getId()}} <span class="copy" v-clipboard:copy="getId()">(copy)</span></p>
                 </div>
-            </div>
-            <div v-else>
-
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-    import { StaticAPI } from "@/api/staticApi";
+    import {StaticAPI} from "@/api/staticApi";
     import WidgetList from "@/components/WidgetList.vue";
     import ImageWidget from "@/components/widgets/ImageWidget.vue";
 
-    import { GeneratedProblem, StaticProblem, Widget, WidgetOptions, StaticProblemSet } from "@/store";
-    import { Component, Prop, Vue } from "vue-property-decorator";
+    import {GeneratedProblem, StaticProblem, Widget, WidgetOptions, StaticProblemSet} from "@/store";
+    import {Component, Prop, Vue, Watch} from "vue-property-decorator";
 
     import TextWidget from "./widgets/TextWidget.vue";
 
     @Component({
-                   components: {WidgetList}
-               })
+        components: {WidgetList}
+    })
     export default class ProblemCard extends Vue {
         @Prop() public problem!: GeneratedProblem | StaticProblem;
         @Prop() public problemNumber!: number;
@@ -46,7 +47,7 @@
         public showingAnswer: boolean = false;
         public staticSet: StaticProblemSet | null = null;
         public isStatic: Boolean = false;
-        public staticApi: StaticAPI | null = null;
+        public staticApi: StaticAPI = new StaticAPI();
 
 
         widgetType(widget: Widget) {
@@ -60,6 +61,10 @@
 
         toggleAnswerVisibility() {
             this.showingAnswer = !this.showingAnswer;
+
+            if (this.staticSet != null) {
+                this.staticApi.setProblemUsed(this.problem.id, true)
+            }
         }
 
         protected async beforeMount() {
@@ -72,7 +77,6 @@
             }
 
             this.isStatic = true;
-            this.staticApi = new StaticAPI();
 
             let staticSetOrError: StaticProblemSet | string = await this.staticApi.getStaticProblemSet(this.problem.setId);
 
@@ -80,23 +84,37 @@
                 this.staticSet = staticSetOrError;
             }
         }
+
+        public answerWidgets() {
+            return this.staticSet != null ? this.staticSet.answerContents : (this.problem as GeneratedProblem).solution
+        }
+
+        public getId() {
+            return this.staticSet != null ? this.problem.id : `${this.problem.setId}:${this.problem.id}`
+        }
+
+        @Watch('problem')
+        onProblemChanged() {
+            this.setupStatic();
+        }
     }
 </script>
 <style scoped lang="scss">
-    .problems {
+    .content {
         line-height: 1;
         flex: 10;
         width: 100%;
+        padding: 0 8pt;
         display: inline-block;
         transition: height 200ms;
     }
 
-    .problems > * {
+    .content > * {
         padding: 8pt;
         width: 100%;
     }
 
-    .problems .answer {
+    .content .answer {
         padding: 0;
         width: 100%;
     }
@@ -105,22 +123,32 @@
         padding: 8pt;
     }
 
-    // .problems>*:first-child {
-    //   color: red;
-    // }
-
     .wrapper {
         display: flex;
-        width: min-content;
-        min-width: 600pt;
         flex-direction: row;
         padding: 12pt;
         border-radius: 4pt;
-        box-shadow: 0px 4px 0px #dadada;
+        box-shadow: 0 4px 0 #dadada;
         background-color: #f5f5f5;
     }
 
-    .number {
+    @media only screen and (min-width: 948px) {
+        .wrapper {
+            width: 900px
+        }
+    }
+
+    .info-controls {
+        flex: 2;
+    }
+
+    @media only screen and (min-width: 600px) {
+        .info-controls {
+            flex: 1;
+        }
+    }
+
+    .problemNumber {
         font-size: 1.25em;
         padding: 4pt 6pt;
         height: min-content;
@@ -129,14 +157,10 @@
     }
 
     .divider {
-        height: 1px;
+        height: 0px;
         padding: 0;
         margin: 12pt 8pt;
-        background-color: #fff;
-    }
-
-    .info-controls {
-        flex: 1.5;
+        border: 1px solid #212121;
     }
 
     .answer-visible-button {
@@ -148,5 +172,37 @@
     .answer-visible-button:hover {
         opacity: 0.5;
         cursor: pointer;
+    }
+
+    .problem-info {
+        margin: 0;
+        text-transform: lowercase;
+        font-family: sans-serif;
+        /*font-style: italic;*/
+        font-size: 0.9em;
+        color: #888888;
+    }
+
+    .problem-info *:last-child {
+        margin-bottom: 0;
+    }
+
+    @media only screen and (max-width: 500px) {
+        .problem-info {
+            line-height: 0.5;
+        }
+    }
+
+    .copy {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .copy:hover {
+        text-decoration: underline;
+    }
+
+    .copy:active {
+        color: #444444;
     }
 </style>

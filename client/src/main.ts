@@ -7,6 +7,10 @@ import { router } from './router';
 import { store } from './store';
 
 Vue.config.productionTip = false;
+// @ts-ignore
+import VueClipboard from 'vue-clipboard2'
+
+Vue.use(VueClipboard)
 
 new Vue({
   router,

@@ -30,3 +30,7 @@ class StaticProblemDataSource(ABC):
     @abstractmethod
     def list_problems_from_set(self, set_id: str) -> Optional[StaticProblemEntity]:
         pass
+
+    @abstractmethod
+    def set_used(self, id: int, used: bool):
+        pass

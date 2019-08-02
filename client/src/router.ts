@@ -5,6 +5,7 @@ import Home from '@/views/Home.vue';
 import Problems from '@/views/Problems.vue';
 import ManageStatic from "@/views/ManageStatic.vue";
 import CreateStaticSet from "@/views/CreateStaticSet.vue";
+import ManageStaticSets from "@/views/ManageStaticSets.vue";
 
 Vue.use(Router);
 
@@ -19,6 +20,11 @@ export const router: Router = new Router({
         },
         {
             path: '/problems/:type',
+            name: 'problems',
+            component: Problems,
+        },
+        {
+            path: '/problems/:type/:count',
             name: 'problems',
             component: Problems,
         },
@@ -40,7 +46,12 @@ export const router: Router = new Router({
                     path: 'set/edit',
                     name: 'edit-set',
                     component: Home
-                }
+                },
+                {
+                    path: 'sets',
+                    name: 'manage-sets',
+                    component: ManageStaticSets
+                },
             ]
         }
     ],
