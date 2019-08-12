@@ -6,9 +6,9 @@
             </div>
         </div>
         <div class="content">
-            <div v-if="isStatic">
+            <div v-if="isStatic && (!staticSet || staticSet.instructionContents.length > 0)">
                 <div v-if="!staticSet">loading instructions...</div>
-                <div v-else>
+                <div v-else-if="staticSet.instructionContents">
                     <WidgetList :widgets="staticSet.instructionContents"/>
                 </div>
             </div>

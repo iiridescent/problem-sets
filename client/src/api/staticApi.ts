@@ -79,7 +79,7 @@ export class StaticAPI {
             body: formData,
         };
 
-        let response = await fetch(`${StaticAPI.API_URL}/problems/`, options);
+        let response = await fetch(`${StaticAPI.API_URL}/problems`, options);
 
         if (!response.ok) {
             console.log(response.statusText)

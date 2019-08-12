@@ -1,11 +1,14 @@
 #  Copyright (c) 2019 Thomas Howe
 
 import os
+from queue import Queue
+from threading import Thread
 
 import sqlalchemy as sql
 from sqlalchemy import MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.pool import QueuePool
 
 from problem_sets.environment import Environment
 
@@ -24,7 +27,7 @@ static_problem_set_repo: StaticProblemSetSQLiteRepository = None
 static_problem_repo: StaticProblemSQLiteRepository = None
 
 db: sql.engine = None
-db_meta: sql.MetaData = None
+db_meta: sql.MetaData or None = None
 
 Session: scoped_session = scoped_session(sessionmaker())
 
