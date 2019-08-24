@@ -6,12 +6,12 @@ import { GeneratedProblem } from "./store";
 Vue.use(Vuex);
 
 export const store: Store<AppState> = new Vuex.Store({
-    state: {
-        currentSession: undefined
-    },
-    mutations: {},
-    actions: {},
-});
+                                                         state: {
+                                                             currentSession: undefined
+                                                         },
+                                                         mutations: {},
+                                                         actions: {},
+                                                     });
 
 export interface AppState {
     currentSession: CurrentSession | undefined;
@@ -62,7 +62,7 @@ export interface ImageWidgetOptions extends WidgetOptions {
 }
 
 export interface ImageInfo {
-    blob: File;
+    file: File;
     url: string;
 }
 
@@ -74,4 +74,9 @@ export interface StaticProblemSetFormInfo {
     instructions: TextOrImage[];
     problems: TextOrImage[];
     answers: TextOrImage[];
+}
+
+export interface TextImagePasteCollectorState {
+    items: TextOrImage[];
+    inputValue: string;
 }

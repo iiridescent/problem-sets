@@ -1,8 +1,8 @@
 <template>
     <div>
-        <img @click="toggleExpanded()" v-bind:src="`http://${hostname}:5000/static/images/`+imageId+'.png'"/>
+        <img class="card" @click="toggleExpanded()" v-bind:src="`http://${hostname}:5000/static/images/`+imageId+'.png'"/>
         <div class="expanded-background" v-if="expanded">
-            <img class="expanded" @click="toggleExpanded()"
+            <img class="expanded card" @click="toggleExpanded()"
                  v-bind:src="`http://${hostname}:5000/static/images/`+imageId+'.png'"/>
         </div>
     </div>

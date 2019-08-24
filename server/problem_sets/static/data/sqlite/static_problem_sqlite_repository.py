@@ -65,8 +65,15 @@ class StaticProblemSQLiteRepository(SQLiteRepository, StaticProblemDataSource):
         pass
 
     def pick_problem_from_set(self, set_id: str) -> Optional[StaticProblemEntity]:
-        row = self.session.query(StaticProblemRow).filter_by(set_id=set_id, used=False).order_by(
-            func.random()).first()
+        
+        # Pick last problem
+        
+        # This should usually return the last problem, which is usually more difficult that the average problem in a set.
+        # I would like to do it completely at random, but because I'm running this through Anki, which will space reviews
+        # depending on my feedback, I need to get a good idea of how hard the problem type can be. I'm considering options
+        # for mitigating this, including building a plugin into Anki.
+
+        row = self.session.query(StaticProblemRow).filter_by(set_id=set_id, used=False).order_by(StaticProblemRow.id.desc()).first()
 
         if row is None:
             return None
@@ -80,7 +87,7 @@ class StaticProblemSQLiteRepository(SQLiteRepository, StaticProblemDataSource):
     def set_used(self, id: int, used: bool):
         row: StaticProblemRow = self.session.query(StaticProblemRow).filter_by(id=id).first()
 
-        row.used = True
+        row.used = used
 
         self.db_commit_or_rollback()
 

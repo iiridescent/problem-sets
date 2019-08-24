@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="card wrapper">
         <div class="info-controls">
             <div class="warning">
                 🤨&#xFE0F;
@@ -28,7 +28,6 @@
         width: 100%;
         padding: 0 8pt;
         display: inline-block;
-        transition: height 200ms;
     }
 
     .content > * {
@@ -45,9 +44,6 @@
         display: flex;
         flex-direction: row;
         padding: 12pt;
-        border-radius: 4pt;
-        box-shadow: 0 4px 0 #dadada;
-        background-color: #f5f5f5;
     }
 
     @media only screen and (min-width: 948px) {
@@ -57,12 +53,12 @@
     }
 
     .info-controls {
-        flex: 2;
+        width: 60pt;
     }
 
     @media only screen and (min-width: 600px) {
         .info-controls {
-            flex: 1;
+            width: 80pt
         }
     }
 

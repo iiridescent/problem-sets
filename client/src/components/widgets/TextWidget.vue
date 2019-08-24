@@ -1,28 +1,27 @@
 <template>
-    <div ref="text"></div>
+    <MathText :text="text"></MathText>
 </template>
 
 <script lang="ts">
-    import renderMathInText from "@/util/render-text/render-text";
-    import {Component, Prop, Vue} from "vue-property-decorator";
+    import MathText from "@/components/MathText.vue";
+    import { Component, Prop, Vue } from "vue-property-decorator";
 
-    import {TextWidgetOptions, Widget} from "../../store";
+    import { TextWidgetOptions, Widget } from "@/store";
 
-    @Component
+    @Component({
+                   components: {
+                       MathText
+                   }
+               })
     export default class TextWidget extends Vue {
-        // need to be formatting latex with katex here
         @Prop() public widget!: Widget;
 
-        public text: string = "";
+        private text: String = "";
 
         mounted() {
             const options: TextWidgetOptions = this.widget.options as TextWidgetOptions;
 
-            const textElement = this.$refs["text"] as Element;
-
-            textElement.innerHTML = "";
-
-            textElement.appendChild(renderMathInText(options.text) as unknown as Node);
+            this.text = options.text;
         }
     }
 </script>

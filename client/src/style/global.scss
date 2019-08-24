@@ -1,0 +1,119 @@
+@import "constants";
+
+#app {
+  font-family: $font-family;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: $text;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+.copy {
+  cursor: pointer;
+  user-select: none;
+}
+
+.copy:hover {
+  text-decoration: underline;
+}
+
+.copy:active {
+  color: $active;
+}
+
+.card {
+  border: $border-width solid $primary-darker;
+  border-radius: 2pt;
+  background-color: $card-bg;
+}
+
+.card-holder > * {
+  margin: 8pt 0;
+}
+
+.selected-card {
+  border-color: blue;
+}
+
+.shortcut {
+  font-family: monospace;
+  font-size: 0.9em;
+  opacity: 0.6;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.shortcut > span {
+  padding: 0 4pt;
+  border-radius: 2pt;
+  border: $border-width solid $text;
+  margin: 0 2pt;
+}
+
+.shortcut.shortcut-disabled {
+  opacity: 0.2;
+}
+
+@media only screen and (max-width: 600px) {
+  .shortcut, .shortcut-wrapper {
+    display: none;
+  }
+}
+
+.btn {
+  font-size: 1em;
+  border: $border-width solid $primary-darker;
+  border-radius: 2pt;
+  background: linear-gradient(white, $primary-dark);
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  font-family: $font-family;
+}
+
+.btn .shortcut {
+  margin-left: 6pt;
+}
+
+// Shortcuts are on the right side of buttons, so we don't want to add any more padding to the right-most shortcut
+// button span than we have to
+.btn .shortcut > span:last-child {
+  margin-right: 0;
+}
+
+.btn .shortcut > span:first-child {
+  margin-left: 0;
+}
+
+.btn:disabled {
+  background: white;
+  border: $border-width solid $disabled;
+  color: $disabled;
+}
+
+.btn:disabled > .shortcut > span {
+  border-color: $disabled;
+}
+
+.btn:hover:enabled {
+  border-color: $active;
+  background: $primary;
+  cursor: pointer;
+}
+
+.btn:active {
+  border-color: $text;
+  background-color: $active-bg;
+}
+
+.btn-lg {
+  padding: 8pt;
+}
+
+.btn-sm {
+  padding: 4pt 8pt;
+}
+

@@ -1,8 +1,15 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper card" :class="{ 'selected-card': selected }" @click="onClick">
         <div class="info-controls">
-            <div class="problemNumber">{{ problemNumber }}.</div>
-            <div class="answer-visible-button" @click="toggleAnswerVisibility">{{ showingAnswer ? "hide" : "show" }}
+            <div class="problem-number" v-if="problemNumber != null">{{ problemNumber + 1 }}.</div>
+            <button class="btn btn-sm" @click="toggleAnswerVisibility">
+                {{ showingAnswer ? "hide" : "show" }}<p class="shortcut"><span>h</span></p>
+            </button>
+            <div v-if="showingAnswer && isStatic" class="used-toggle-container">
+                <span class="used-toggle-indicator">{{markStaticAsUsed ? '\u{2705}' : '\u{274C}'}}</span>
+                <button class="btn btn-sm" @click="toggleMarkStaticAsUsed()">
+                    mark used <p class="shortcut"><span>g</span></p>
+                </button>
             </div>
         </div>
         <div class="content">
@@ -14,12 +21,13 @@
             </div>
             <WidgetList :widgets="problem.content"/>
             <div class="answer" v-show="showingAnswer">
-                <hr class="divider">
+                <div class="divider"></div>
                 <div v-if="staticSet != null">{{staticSet.source}}</div>
                 <WidgetList :widgets="answerWidgets()"/>
+                <div class="divider"></div>
                 <div class="problem-info">
                     <p>{{problem.format}}</p>
-                    <p>set id: {{problem.setId}}</p>
+                    <p>set id: {{problem.setId}} <span class="copy" v-clipboard:copy="problem.setId">(copy)</span></p>
                     <p>id: {{getId()}} <span class="copy" v-clipboard:copy="getId()">(copy)</span></p>
                 </div>
             </div>
@@ -28,27 +36,29 @@
 </template>
 
 <script lang="ts">
-    import {StaticAPI} from "@/api/staticApi";
+    import { StaticAPI } from "@/api/staticApi";
     import WidgetList from "@/components/WidgetList.vue";
     import ImageWidget from "@/components/widgets/ImageWidget.vue";
 
-    import {GeneratedProblem, StaticProblem, Widget, WidgetOptions, StaticProblemSet} from "@/store";
-    import {Component, Prop, Vue, Watch} from "vue-property-decorator";
+    import { GeneratedProblem, StaticProblem, Widget, WidgetOptions, StaticProblemSet } from "@/store";
+    import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
     import TextWidget from "./widgets/TextWidget.vue";
 
     @Component({
-        components: {WidgetList}
-    })
+                   components: {WidgetList}
+               })
     export default class ProblemCard extends Vue {
         @Prop() public problem!: GeneratedProblem | StaticProblem;
         @Prop() public problemNumber!: number;
+        @Prop() public onClickCallback: Function | undefined;
+        @Prop() public selected!: boolean;
 
         public showingAnswer: boolean = false;
         public staticSet: StaticProblemSet | null = null;
-        public isStatic: Boolean = false;
+        public isStatic: boolean = false;
         public staticApi: StaticAPI = new StaticAPI();
-
+        public markStaticAsUsed: boolean = true;
 
         widgetType(widget: Widget) {
             let options: WidgetOptions = widget.options;
@@ -62,9 +72,54 @@
         toggleAnswerVisibility() {
             this.showingAnswer = !this.showingAnswer;
 
-            if (this.staticSet != null) {
-                this.staticApi.setProblemUsed(this.problem.id, true)
+            if (this.staticSet != null && this.showingAnswer && this.markStaticAsUsed) {
+                this.staticApi.setProblemUsed(this.problem.id, true);
             }
+        }
+
+        toggleMarkStaticAsUsed() {
+            this.markStaticAsUsed = !this.markStaticAsUsed;
+
+            if (!this.isStatic || this.staticSet == null) {
+                return;
+            }
+
+
+
+            this.staticApi.setProblemUsed(this.problem.id, this.markStaticAsUsed);
+        }
+
+        onClick() {
+            if (!this.onClickCallback || this.problemNumber == null) {
+                return;
+            }
+
+            this.onClickCallback(this.problemNumber);
+        }
+
+        protected created() {
+            window.addEventListener("keydown", this.onKeyDown);
+        }
+
+        protected destroyed() {
+            window.removeEventListener("keydown", this.onKeyDown);
+        }
+
+        public onKeyDown(e: KeyboardEvent) {
+            // h
+            if (e.keyCode === 72 && this.selected) {
+                this.toggleAnswerVisibility();
+                e.preventDefault();
+                return false;
+            }
+
+            if (e.keyCode == 71 && this.selected && this.isStatic) {
+                this.toggleMarkStaticAsUsed();
+                e.preventDefault();
+                return false;
+            }
+
+            return true;
         }
 
         protected async beforeMount() {
@@ -86,22 +141,24 @@
         }
 
         public answerWidgets() {
-            return this.staticSet != null ? this.staticSet.answerContents : (this.problem as GeneratedProblem).solution
+            return this.staticSet != null ? this.staticSet.answerContents : (this.problem as GeneratedProblem).solution;
         }
 
         public getId() {
-            return this.staticSet != null ? this.problem.id : `${this.problem.setId}:${this.problem.id}`
+            return this.staticSet != null ? this.problem.id : `${this.problem.setId}:${this.problem.id}`;
         }
 
-        @Watch('problem')
+        @Watch("problem")
         onProblemChanged() {
             this.setupStatic();
+            this.showingAnswer = false;
         }
     }
 </script>
 <style scoped lang="scss">
+    @import "../style/constants";
+
     .content {
-        line-height: 1;
         flex: 10;
         width: 100%;
         padding: 0 8pt;
@@ -127,40 +184,48 @@
         display: flex;
         flex-direction: row;
         padding: 12pt;
-        border-radius: 4pt;
-        box-shadow: 0 4px 0 #dadada;
-        background-color: #f5f5f5;
+        width: calc(100% - 34px);
     }
 
-    @media only screen and (min-width: 948px) {
-        .wrapper {
-            width: 900px
-        }
-    }
+    /*@media only screen and (min-width: 948px) {*/
+    /*    .wrapper {*/
+    /*        width: 900px*/
+    /*    }*/
+    /*}*/
 
     .info-controls {
-        flex: 2;
+        width: 60pt;
     }
 
     @media only screen and (min-width: 600px) {
         .info-controls {
-            flex: 1;
+            width: 90pt
         }
     }
 
-    .problemNumber {
+    .info-controls > * {
+        width: 100%;
+        margin-bottom: 8pt;
+    }
+
+    .info-controls > *:last-child {
+        margin-bottom: 0;
+    }
+
+    .problem-number {
         font-size: 1.25em;
         padding: 4pt 6pt;
         height: min-content;
         text-align: center;
         font-weight: bold;
+        margin-bottom: 10pt;
     }
 
     .divider {
-        height: 0px;
+        height: 1px;
         padding: 0;
-        margin: 12pt 8pt;
-        border: 1px solid #212121;
+        background-color: $primary-darker;
+        margin: 12pt -20pt 12pt 8pt
     }
 
     .answer-visible-button {
@@ -183,26 +248,20 @@
         color: #888888;
     }
 
-    .problem-info *:last-child {
+    .problem-info > *:first-child {
+        margin-top: 0;
+    }
+
+    .problem-info > *:last-child {
         margin-bottom: 0;
     }
 
-    @media only screen and (max-width: 500px) {
-        .problem-info {
-            line-height: 0.5;
-        }
+    .used-toggle-container {
+        display: flex;
+        align-items: center;
     }
 
-    .copy {
-        cursor: pointer;
-        user-select: none;
-    }
-
-    .copy:hover {
-        text-decoration: underline;
-    }
-
-    .copy:active {
-        color: #444444;
+    .used-toggle-container .used-toggle-indicator {
+        margin-right: 8pt;
     }
 </style>

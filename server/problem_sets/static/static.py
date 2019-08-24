@@ -27,6 +27,10 @@ def static_problem(set_id: str):
     return static_problem
 
 
+def is_static_problem_set_id_available(set_id: str):
+    return static_problem_set_data_source.check_id_available(set_id)
+
+
 def create_static_problem_set(set: StaticProblemSet):
     if not static_problem_set_data_source.check_id_available(set.id):
         raise Exception("ID for problem set isn't unique")

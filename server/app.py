@@ -128,6 +128,13 @@ def static_set(set_id: str):
         return Response(status=200)
 
 
+@app.route('/api/static/check_set_id_available/<set_id>')
+def is_static_set_id_available(set_id: str):
+    if request.method == 'GET':
+        is_id_available = static.is_static_problem_set_id_available(set_id)
+        return str(is_id_available).lower()
+
+
 @app.route('/api/static/problems', methods=['GET', 'POST'])
 def static_problems():
     if request.method == 'POST':
