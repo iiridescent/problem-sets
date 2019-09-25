@@ -1,4 +1,4 @@
-# Problem sets server
+# Problem Sets API server and static server
 
 ## Running in production
 
