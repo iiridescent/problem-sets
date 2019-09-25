@@ -1,4 +1,4 @@
-# README
+# Problem sets server
 
 ## Running in production
 
