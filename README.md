@@ -1,4 +1,8 @@
-# Problem Sets API server and static server
+# Problem Sets API server and web client
+
+![image](https://user-images.githubusercontent.com/24789592/70971219-b17c9280-205d-11ea-9cbf-771509920b62.png)
+
+_Example generated problem._
 
 ## Running in production
 
