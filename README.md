@@ -24,4 +24,4 @@ To run the Python server in `server`:
 
 ## Threading issues
 
-For now, run the Flask server with `--without-threads`. I'm looking into ways to allow threaded Flask requests without SQLAlchemy locking the SQLite database. I don't want to use Flask-SQLAlchemy because it requires the server API logic to manage the SQLAlchemy session, which prevents me from building the Flask API on top of an abstract library model.
+For now, run the Flask server with `--without-threads`. I'm looking into ways to allow threaded Flask requests without SQLAlchemy locking the SQLite database. I don't want to use Flask-SQLAlchemy because it requires the server API logic to manage the SQLAlchemy session, which prevents me from building the Flask API on top of an abstract data interface.
