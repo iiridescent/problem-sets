@@ -4,7 +4,7 @@ sqlalchemy
 pytest
 ipython==7.6.0
 dataclasses==0.6
-flask_cors==3.0.8
+flask_cors==3.0.9
 numpy==1.16.4
 sympy==1.4
 typing==3.7.4
